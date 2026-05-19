@@ -1,0 +1,113 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="{% block meta_description %}Helping Hand — Professional home healthcare services. Certified nurses, compassionate caregivers, right at your doorstep.{% endblock %}">
+  <title>{% block title %}Helping Hand{% endblock %} — Home Healthcare</title>
+
+  <!-- Tailwind CSS (CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            heading: ['Inter', 'system-ui', 'sans-serif'],
+            body: ['DM Sans', 'system-ui', 'sans-serif'],
+          },
+        },
+      },
+    }
+  </script>
+
+  <!-- Custom Design System CSS -->
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+  <!-- HTMX -->
+  <script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"></script>
+
+  <!-- Lucide Icons (SVG icon library) -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="min-h-screen flex flex-col" style="background: var(--color-surface-50);">
+  <!-- Navbar -->
+  {% include "core/_navbar.html" %}
+
+  <!-- Messages -->
+  {% if messages %}
+  <div class="fixed top-20 right-4 z-50 space-y-2" id="messages-container">
+    {% for message in messages %}
+    <div class="card animate-fade-in-up flex items-center gap-3 px-5 py-3 text-sm
+      {% if message.tags == 'success' %}border-l-4 border-green-500{% endif %}
+      {% if message.tags == 'error' %}border-l-4 border-red-500{% endif %}
+      {% if message.tags == 'warning' %}border-l-4 border-amber-500{% endif %}
+      {% if message.tags == 'info' %}border-l-4 border-blue-500{% endif %}"
+      style="min-width: 280px;">
+      <span class="text-surface-800">{{ message }}</span>
+    </div>
+    {% endfor %}
+  </div>
+  <script>
+    // Auto-dismiss messages after 5 seconds
+    setTimeout(() => {
+      const container = document.getElementById('messages-container');
+      if (container) container.style.display = 'none';
+    }, 5000);
+  </script>
+  {% endif %}
+
+  <!-- Main Content -->
+  <main class="flex-1">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Footer -->
+  {% include "core/_footer.html" %}
+
+  <!-- Lucide Icons Init -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+    });
+    // Re-initialize icons after HTMX swaps
+    document.body.addEventListener('htmx:afterSwap', () => {
+      lucide.createIcons();
+    });
+  </script>
+
+  <!-- Navbar scroll effect -->
+  <script>
+    const navbar = document.getElementById('main-navbar');
+    const navbarInner = document.getElementById('navbar-inner');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 20) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    }, { passive: true });
+
+    // Mobile menu toggle
+    const mobileToggle = document.getElementById('mobile-menu-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+    if (mobileToggle && mobileMenu) {
+      mobileToggle.addEventListener('click', () => {
+        mobileMenu.classList.toggle('open');
+        const icon = mobileToggle.querySelector('i');
+        if (mobileMenu.classList.contains('open')) {
+          mobileToggle.innerHTML = '<i data-lucide="x" class="w-6 h-6"></i>';
+        } else {
+          mobileToggle.innerHTML = '<i data-lucide="menu" class="w-6 h-6"></i>';
+        }
+        lucide.createIcons();
+      });
+    }
+  </script>
+
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>

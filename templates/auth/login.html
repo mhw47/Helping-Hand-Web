@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Login{% endblock %}
+{% block meta_description %}Log in to your Helping Hand account to manage bookings and access healthcare services.{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center py-24 px-4" style="background: var(--color-surface-50);">
+  <div class="w-full max-w-md">
+    <!-- Card -->
+    <div class="card" style="padding: 2.5rem;">
+      <!-- Header -->
+      <div class="text-center mb-8">
+        <a href="{% url 'landing' %}" class="inline-flex items-center gap-2 mb-6">
+          <div class="w-12 h-12 rounded-xl gradient-primary flex items-center justify-center shadow-lg" style="box-shadow: 0 4px 15px rgba(13, 148, 136, 0.2);">
+            <i data-lucide="heart" class="w-6 h-6 text-white" fill="white"></i>
+          </div>
+        </a>
+        <h1 class="text-2xl font-extrabold text-surface-900 mb-2">Welcome Back</h1>
+        <p class="text-sm text-surface-500">Sign in to your Helping Hand account</p>
+      </div>
+
+      <!-- Error Messages -->
+      {% if form.non_field_errors %}
+      <div class="mb-6 p-4 rounded-xl text-sm" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); color: #f87171;">
+        <div class="flex items-center gap-2 mb-1">
+          <i data-lucide="alert-circle" class="w-4 h-4 shrink-0"></i>
+          <span class="font-medium">Login failed</span>
+        </div>
+        {% for error in form.non_field_errors %}
+        <p>{{ error }}</p>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <!-- Login Form -->
+      <form method="post" action="{% url 'login' %}" id="login-form">
+        {% csrf_token %}
+
+        {% if next %}
+        <input type="hidden" name="next" value="{{ next }}">
+        {% endif %}
+
+        <!-- Username -->
+        <div class="mb-5">
+          <label for="login-username" class="block text-sm font-medium text-surface-700 mb-2">Username</label>
+          {{ form.username }}
+          {% if form.username.errors %}
+          <p class="text-xs mt-1.5" style="color: var(--color-error);">{{ form.username.errors.0 }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Password -->
+        <div class="mb-6">
+          <label for="login-password" class="block text-sm font-medium text-surface-700 mb-2">Password</label>
+          {{ form.password }}
+          {% if form.password.errors %}
+          <p class="text-xs mt-1.5" style="color: var(--color-error);">{{ form.password.errors.0 }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn-primary w-full text-base" id="login-submit-btn">
+          <i data-lucide="log-in" class="w-5 h-5 mr-2"></i>
+          Sign In
+        </button>
+      </form>
+
+      <!-- Divider -->
+      <div class="flex items-center gap-3 my-6">
+        <div class="flex-1 h-px" style="background: var(--color-surface-300);"></div>
+        <span class="text-xs text-surface-500">OR</span>
+        <div class="flex-1 h-px" style="background: var(--color-surface-300);"></div>
+      </div>
+
+      <!-- Register Link -->
+      <p class="text-center text-sm text-surface-600">
+        Don't have an account?
+        <a href="{% url 'register' %}" class="font-semibold text-primary-400 transition-colors" style="text-decoration: underline; text-underline-offset: 3px;" id="goto-register">
+          Create one
+        </a>
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}
