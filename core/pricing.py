@@ -130,6 +130,7 @@ def format_currency(amount) -> str:
     """
     amount = int(amount)
     return f'₹{amount:,}'
+<<<<<<< HEAD
 
 
 def get_tiered_prices(service_type: str) -> Optional[dict]:
@@ -159,3 +160,5 @@ def get_tiered_prices(service_type: str) -> Optional[dict]:
         'monthly': int(daily * (1 - monthly_discount)),
         'label': rate['label'],
     }
+=======
+>>>>>>> c33abf1 (Reworked the whole architecture with Django & PostgreSQL)

@@ -15,6 +15,10 @@ from django.urls import reverse
 
 from core.models import User
 from core.forms import PatientRegistrationForm, AgencyRegistrationForm, HelpingHandLoginForm
+<<<<<<< HEAD
+=======
+from core.decorators import patient_required, agency_required
+>>>>>>> c33abf1 (Reworked the whole architecture with Django & PostgreSQL)
 
 
 # ═══════════════════════════════════════════════════════════════════════════════

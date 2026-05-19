@@ -37,8 +37,25 @@ class BookingQuerySet(models.QuerySet):
         return self.filter(status='reviewing')
 
 
+<<<<<<< HEAD
 # Auto-proxies all QuerySet methods to the Manager — no manual delegation needed.
 BookingManager = BookingQuerySet.as_manager()
+=======
+class BookingManager(models.Manager):
+    """Custom manager that uses BookingQuerySet."""
+
+    def get_queryset(self):
+        return BookingQuerySet(self.model, using=self._db)
+
+    def active(self):
+        return self.get_queryset().active()
+
+    def past(self):
+        return self.get_queryset().past()
+
+    def needs_review(self):
+        return self.get_queryset().needs_review()
+>>>>>>> c33abf1 (Reworked the whole architecture with Django & PostgreSQL)
 
 
 class StaffProfileQuerySet(models.QuerySet):
@@ -84,5 +101,19 @@ class StaffProfileQuerySet(models.QuerySet):
         return base_qs.filter(pk__in=pks)
 
 
+<<<<<<< HEAD
 # Auto-proxies all QuerySet methods to the Manager — no manual delegation needed.
 StaffProfileManager = StaffProfileQuerySet.as_manager()
+=======
+class StaffProfileManager(models.Manager):
+    """Custom manager that uses StaffProfileQuerySet."""
+
+    def get_queryset(self):
+        return StaffProfileQuerySet(self.model, using=self._db)
+
+    def available(self):
+        return self.get_queryset().available()
+
+    def matching(self, patient_gender, service_type):
+        return self.get_queryset().matching(patient_gender, service_type)
+>>>>>>> c33abf1 (Reworked the whole architecture with Django & PostgreSQL)

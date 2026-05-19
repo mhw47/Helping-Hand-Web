@@ -6,6 +6,10 @@ Phase 3: Authentication — Register, Login, Logout.
 """
 
 import json
+<<<<<<< HEAD
+=======
+from decimal import Decimal
+>>>>>>> c33abf1 (Reworked the whole architecture with Django & PostgreSQL)
 
 from django.contrib import messages
 from django.contrib.auth import login
@@ -19,7 +23,11 @@ from .forms import (
     AgencyRegistrationForm,
     HelpingHandLoginForm,
 )
+<<<<<<< HEAD
 from .pricing import SERVICE_RATES, format_currency, get_tiered_prices
+=======
+from .pricing import SERVICE_RATES, format_currency
+>>>>>>> c33abf1 (Reworked the whole architecture with Django & PostgreSQL)
 
 
 # ─── Helper: Build common context data ─────────────────────────────────────────
@@ -146,6 +154,7 @@ SERVICE_FEATURES = {
 
 
 def _build_service_context(card):
+<<<<<<< HEAD
     """Enrich a service card dict with pricing data from the pricing engine."""
     prices = get_tiered_prices(card['key'])
     return {
@@ -154,12 +163,24 @@ def _build_service_context(card):
         'daily_price': format_currency(prices['daily']),
         'weekly_price': format_currency(prices['weekly']),
         'monthly_price': format_currency(prices['monthly']),
+=======
+    """Enrich a service card dict with pricing data."""
+    rate = SERVICE_RATES[card['key']]
+    daily = rate['daily']
+    return {
+        **card,
+        'price': format_currency(daily),
+        'daily_price': format_currency(daily),
+        'weekly_price': format_currency(int(daily * Decimal('0.9'))),
+        'monthly_price': format_currency(int(daily * Decimal('0.75'))),
+>>>>>>> c33abf1 (Reworked the whole architecture with Django & PostgreSQL)
     }
 
 
 def _build_pricing_rates():
     """Build pricing rate list for the landing page pricing section."""
     rates = []
+<<<<<<< HEAD
     for key in SERVICE_RATES:
         prices = get_tiered_prices(key)
         rates.append({
@@ -168,6 +189,16 @@ def _build_pricing_rates():
             'daily_formatted': format_currency(prices['daily']),
             'weekly_formatted': format_currency(prices['weekly']),
             'monthly_formatted': format_currency(prices['monthly']),
+=======
+    for key, rate in SERVICE_RATES.items():
+        daily = rate['daily']
+        rates.append({
+            'key': key,
+            'label': rate['label'],
+            'daily_formatted': format_currency(daily),
+            'weekly_formatted': format_currency(int(daily * Decimal('0.9'))),
+            'monthly_formatted': format_currency(int(daily * Decimal('0.75'))),
+>>>>>>> c33abf1 (Reworked the whole architecture with Django & PostgreSQL)
         })
     return rates
 

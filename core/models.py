@@ -29,6 +29,7 @@ from .validators import phone_validator, pincode_validator
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
+<<<<<<< HEAD
 # SHARED ENUMS — used by StaffProfile, Booking, and views
 # ═══════════════════════════════════════════════════════════════════════════════
 
@@ -44,6 +45,8 @@ class ServiceType(models.TextChoices):
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
+=======
+>>>>>>> c33abf1 (Reworked the whole architecture with Django & PostgreSQL)
 # USER MODEL
 # ═══════════════════════════════════════════════════════════════════════════════
 
@@ -142,7 +145,18 @@ class StaffProfile(models.Model):
     Uses JSONField for specializations and service types (works on all DB backends).
     """
 
+<<<<<<< HEAD
     # Use module-level Gender and ServiceType enums
+=======
+    class Gender(models.TextChoices):
+        MALE = 'male', 'Male'
+        FEMALE = 'female', 'Female'
+
+    class ServiceType(models.TextChoices):
+        NURSING = 'nursing', 'Nursing Care'
+        HOMECARE = 'homecare', 'Home Care'
+        ONETIME = 'onetime', 'One-Time Service'
+>>>>>>> c33abf1 (Reworked the whole architecture with Django & PostgreSQL)
 
     # Identity
     name = models.CharField(max_length=200)
@@ -203,7 +217,11 @@ class StaffProfile(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     # Custom manager
+<<<<<<< HEAD
     objects = StaffProfileManager
+=======
+    objects = StaffProfileManager()
+>>>>>>> c33abf1 (Reworked the whole architecture with Django & PostgreSQL)
 
     class Meta:
         verbose_name = 'Staff Profile'
@@ -216,7 +234,11 @@ class StaffProfile(models.Model):
     def clean(self):
         super().clean()
         # Validate that service_types contain only valid choices
+<<<<<<< HEAD
         valid_types = {choice[0] for choice in ServiceType.choices}
+=======
+        valid_types = {choice[0] for choice in self.ServiceType.choices}
+>>>>>>> c33abf1 (Reworked the whole architecture with Django & PostgreSQL)
         if self.service_types:
             invalid = set(self.service_types) - valid_types
             if invalid:
@@ -252,7 +274,14 @@ class Booking(models.Model):
         COMPLETED = 'completed', 'Completed'
         CANCELLED = 'cancelled', 'Cancelled'
 
+<<<<<<< HEAD
     # Use module-level ServiceType enum
+=======
+    class ServiceType(models.TextChoices):
+        NURSING = 'nursing', 'Nursing Care'
+        HOMECARE = 'homecare', 'Home Care'
+        ONETIME = 'onetime', 'One-Time Service'
+>>>>>>> c33abf1 (Reworked the whole architecture with Django & PostgreSQL)
 
     # ── Booking Identifier ─────────────────────────────────────────────────
     booking_id = models.CharField(
@@ -289,7 +318,11 @@ class Booking(models.Model):
     patient_name = models.CharField(max_length=200)
     patient_gender = models.CharField(
         max_length=10,
+<<<<<<< HEAD
         choices=Gender.choices,
+=======
+        choices=StaffProfile.Gender.choices,
+>>>>>>> c33abf1 (Reworked the whole architecture with Django & PostgreSQL)
     )
     patient_age = models.PositiveIntegerField(
         validators=[MinValueValidator(16)],
@@ -368,7 +401,11 @@ class Booking(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     # Custom manager
+<<<<<<< HEAD
     objects = BookingManager
+=======
+    objects = BookingManager()
+>>>>>>> c33abf1 (Reworked the whole architecture with Django & PostgreSQL)
 
     class Meta:
         verbose_name = 'Booking'
@@ -416,7 +453,11 @@ class Booking(models.Model):
     def _compute_pricing(self):
         """Compute and set all pricing fields based on service_type and duration_days."""
         # Force one-time services to 1 day
+<<<<<<< HEAD
         if self.service_type == ServiceType.ONETIME:
+=======
+        if self.service_type == self.ServiceType.ONETIME:
+>>>>>>> c33abf1 (Reworked the whole architecture with Django & PostgreSQL)
             self.duration_days = 1
 
         pricing = calculate_price(self.service_type, self.duration_days)
@@ -437,17 +478,26 @@ class Booking(models.Model):
             elif self.status not in [s[0] for s in self.Status.choices]:
                 self.status = self.Status.PENDING
 
+<<<<<<< HEAD
     _PRICING_FIELDS = ('service_type', 'duration_days')
 
+=======
+>>>>>>> c33abf1 (Reworked the whole architecture with Django & PostgreSQL)
     def save(self, *args, **kwargs):
         """
         Override save to:
         1. Auto-generate booking_id for new bookings
+<<<<<<< HEAD
         2. Compute pricing fields (only when relevant fields change)
         3. Determine initial status
         """
         is_new = not self.pk
 
+=======
+        2. Compute pricing fields
+        3. Determine initial status
+        """
+>>>>>>> c33abf1 (Reworked the whole architecture with Django & PostgreSQL)
         # Generate booking ID for new records
         if not self.booking_id:
             self.booking_id = self._generate_booking_id()
@@ -455,6 +505,7 @@ class Booking(models.Model):
             while Booking.objects.filter(booking_id=self.booking_id).exists():
                 self.booking_id = self._generate_booking_id()
 
+<<<<<<< HEAD
         # Only recompute pricing for new bookings or when pricing fields change
         if is_new:
             self._compute_pricing()
@@ -468,6 +519,13 @@ class Booking(models.Model):
 
         # Determine status for new bookings
         if is_new:
+=======
+        # Always recompute pricing
+        self._compute_pricing()
+
+        # Determine status for new bookings
+        if not self.pk:
+>>>>>>> c33abf1 (Reworked the whole architecture with Django & PostgreSQL)
             self._determine_initial_status()
 
         super().save(*args, **kwargs)

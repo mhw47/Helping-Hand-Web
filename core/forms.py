@@ -10,6 +10,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import User
 
 
+<<<<<<< HEAD
 class BaseRegistrationForm(UserCreationForm):
     """
     Shared registration form for all user roles.
@@ -20,6 +21,16 @@ class BaseRegistrationForm(UserCreationForm):
 
     ROLE = None  # Subclasses MUST override
 
+=======
+class PatientRegistrationForm(UserCreationForm):
+    """
+    Registration form for Patient accounts.
+
+    Extends Django's UserCreationForm with phone number (mandatory)
+    and full name fields. Role is auto-set to PATIENT.
+    """
+
+>>>>>>> c33abf1 (Reworked the whole architecture with Django & PostgreSQL)
     first_name = forms.CharField(
         max_length=150,
         required=True,
@@ -52,10 +63,26 @@ class BaseRegistrationForm(UserCreationForm):
         }),
         help_text='Your primary contact number (10 digits).',
     )
+<<<<<<< HEAD
 
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name', 'phone',
+=======
+    email = forms.EmailField(
+        required=False,
+        widget=forms.EmailInput(attrs={
+            'class': 'input-field',
+            'placeholder': 'Email address (optional)',
+            'id': 'reg-email',
+            'autocomplete': 'email',
+        }),
+    )
+
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'phone', 'email',
+>>>>>>> c33abf1 (Reworked the whole architecture with Django & PostgreSQL)
                   'password1', 'password2']
         widgets = {
             'username': forms.TextInput(attrs={
@@ -68,7 +95,11 @@ class BaseRegistrationForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+<<<<<<< HEAD
         # Style the password fields once for all roles
+=======
+        # Style the password fields
+>>>>>>> c33abf1 (Reworked the whole architecture with Django & PostgreSQL)
         self.fields['password1'].widget = forms.PasswordInput(attrs={
             'class': 'input-field',
             'placeholder': 'Create a password',
@@ -83,14 +114,21 @@ class BaseRegistrationForm(UserCreationForm):
         })
 
     def save(self, commit=True):
+<<<<<<< HEAD
         """Set role from the class-level ROLE constant."""
         user = super().save(commit=False)
         user.role = self.ROLE
+=======
+        """Set role to PATIENT on save."""
+        user = super().save(commit=False)
+        user.role = User.Role.PATIENT
+>>>>>>> c33abf1 (Reworked the whole architecture with Django & PostgreSQL)
         if commit:
             user.save()
         return user
 
 
+<<<<<<< HEAD
 class PatientRegistrationForm(BaseRegistrationForm):
     """Registration form for Patient accounts. Adds optional email."""
 
@@ -115,6 +153,76 @@ class AgencyRegistrationForm(BaseRegistrationForm):
     """Registration form for Agency Manager accounts."""
 
     ROLE = User.Role.AGENCY
+=======
+class AgencyRegistrationForm(UserCreationForm):
+    """
+    Registration form for Agency Manager accounts.
+
+    Same fields as Patient but auto-sets role to AGENCY.
+    Kept separate for clarity and potential future field differences.
+    """
+
+    first_name = forms.CharField(
+        max_length=150,
+        required=True,
+        widget=forms.TextInput(attrs={
+            'class': 'input-field',
+            'placeholder': 'First name',
+            'id': 'reg-first-name',
+        }),
+    )
+    last_name = forms.CharField(
+        max_length=150,
+        required=True,
+        widget=forms.TextInput(attrs={
+            'class': 'input-field',
+            'placeholder': 'Last name',
+            'id': 'reg-last-name',
+        }),
+    )
+    phone = forms.CharField(
+        max_length=15,
+        required=True,
+        widget=forms.TextInput(attrs={
+            'class': 'input-field',
+            'placeholder': '10-digit phone number',
+            'id': 'reg-phone',
+            'inputmode': 'numeric',
+        }),
+    )
+
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'phone',
+                  'password1', 'password2']
+        widgets = {
+            'username': forms.TextInput(attrs={
+                'class': 'input-field',
+                'placeholder': 'Choose a username',
+                'id': 'reg-username',
+            }),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['password1'].widget = forms.PasswordInput(attrs={
+            'class': 'input-field',
+            'placeholder': 'Create a password',
+            'id': 'reg-password1',
+        })
+        self.fields['password2'].widget = forms.PasswordInput(attrs={
+            'class': 'input-field',
+            'placeholder': 'Confirm password',
+            'id': 'reg-password2',
+        })
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.role = User.Role.AGENCY
+        if commit:
+            user.save()
+        return user
+>>>>>>> c33abf1 (Reworked the whole architecture with Django & PostgreSQL)
 
 
 class HelpingHandLoginForm(AuthenticationForm):
