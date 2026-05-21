@@ -7,7 +7,7 @@ Phase 3: Authentication — Registration and Login forms.
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
-from .models import User
+from .models import User, Booking
 
 
 <<<<<<< HEAD
@@ -304,3 +304,40 @@ class ProfileCompletionForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+
+
+class BookingForm(forms.ModelForm):
+    """
+    Form for creating a new healthcare service booking.
+    """
+    
+    start_date = forms.DateField(
+        widget=forms.DateInput(attrs={
+            'class': 'input-field',
+            'type': 'date'
+        })
+    )
+
+    class Meta:
+        model = Booking
+        fields = [
+            'patient_name', 'patient_gender', 'patient_age',
+            'symptoms', 'illnesses', 'conditions',
+            'start_date', 'duration_days',
+            'address', 'city', 'pincode', 'phone',
+            'discharge_file'
+        ]
+        widgets = {
+            'patient_name': forms.TextInput(attrs={'class': 'input-field', 'placeholder': 'Patient Full Name'}),
+            'patient_gender': forms.Select(attrs={'class': 'input-field'}),
+            'patient_age': forms.NumberInput(attrs={'class': 'input-field', 'placeholder': 'Age'}),
+            'symptoms': forms.Textarea(attrs={'class': 'input-field', 'rows': 3, 'placeholder': 'Describe symptoms...'}),
+            'illnesses': forms.Textarea(attrs={'class': 'input-field', 'rows': 2, 'placeholder': 'Any pre-existing illnesses?'}),
+            'conditions': forms.Textarea(attrs={'class': 'input-field', 'rows': 2, 'placeholder': 'Current conditions or special requirements'}),
+            'duration_days': forms.NumberInput(attrs={'class': 'input-field', 'placeholder': 'Number of days'}),
+            'address': forms.Textarea(attrs={'class': 'input-field', 'rows': 2, 'placeholder': 'Service Address'}),
+            'city': forms.TextInput(attrs={'class': 'input-field', 'placeholder': 'City'}),
+            'pincode': forms.TextInput(attrs={'class': 'input-field', 'placeholder': 'PIN code'}),
+            'phone': forms.TextInput(attrs={'class': 'input-field', 'placeholder': 'Contact phone for booking'}),
+            'discharge_file': forms.FileInput(attrs={'class': 'input-field'})
+        }
