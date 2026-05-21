@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Create Account{% endblock %}
+{% block meta_description %}Create your Helping Hand account to book professional home healthcare services.{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center py-24 px-4" style="background: var(--color-surface-50);">
+  <div class="w-full max-w-md">
+    <!-- Card -->
+    <div class="card" style="padding: 2.5rem;">
+      <!-- Header -->
+      <div class="text-center mb-8">
+        <a href="{% url 'landing' %}" class="inline-flex items-center gap-2 mb-6">
+          <div class="w-12 h-12 rounded-xl gradient-primary flex items-center justify-center shadow-lg" style="box-shadow: 0 4px 15px rgba(13, 148, 136, 0.2);">
+            <i data-lucide="heart" class="w-6 h-6 text-white" fill="white"></i>
+          </div>
+        </a>
+        <h1 class="text-2xl font-extrabold text-surface-900 mb-2">Create Account</h1>
+        <p class="text-sm text-surface-500">Join Helping Hand to book healthcare services</p>
+      </div>
+
+      <!-- Role Selector -->
+      <div class="flex gap-2 mb-6 p-1 rounded-xl" style="background: var(--color-surface-200);">
+        <a href="{% url 'register' %}?role=patient"
+           class="flex-1 py-2.5 text-center text-sm font-semibold rounded-lg transition-all
+                  {% if role == 'patient' %}gradient-primary text-white shadow-md{% else %}text-surface-500{% endif %}"
+           id="role-patient-tab">
+          Patient
+        </a>
+        <a href="{% url 'register' %}?role=agency"
+           class="flex-1 py-2.5 text-center text-sm font-semibold rounded-lg transition-all
+                  {% if role == 'agency' %}gradient-primary text-white shadow-md{% else %}text-surface-500{% endif %}"
+           id="role-agency-tab">
+          Agency Manager
+        </a>
+      </div>
+
+      <!-- Error Messages -->
+      {% if form.non_field_errors %}
+      <div class="mb-5 p-4 rounded-xl text-sm" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); color: #f87171;">
+        <div class="flex items-center gap-2 mb-1">
+          <i data-lucide="alert-circle" class="w-4 h-4 shrink-0"></i>
+          <span class="font-medium">Registration error</span>
+        </div>
+        {% for error in form.non_field_errors %}
+        <p>{{ error }}</p>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <!-- Registration Form -->
+      <form method="post" action="{% url 'register' %}?role={{ role }}" id="register-form">
+        {% csrf_token %}
+
+        <!-- Name Row -->
+        <div class="grid grid-cols-2 gap-3 mb-4">
+          <div>
+            <label for="reg-first-name" class="block text-sm font-medium text-surface-700 mb-1.5">First Name</label>
+            {{ form.first_name }}
+            {% if form.first_name.errors %}
+            <p class="text-xs mt-1" style="color: var(--color-error);">{{ form.first_name.errors.0 }}</p>
+            {% endif %}
+          </div>
+          <div>
+            <label for="reg-last-name" class="block text-sm font-medium text-surface-700 mb-1.5">Last Name</label>
+            {{ form.last_name }}
+            {% if form.last_name.errors %}
+            <p class="text-xs mt-1" style="color: var(--color-error);">{{ form.last_name.errors.0 }}</p>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Username -->
+        <div class="mb-4">
+          <label for="reg-username" class="block text-sm font-medium text-surface-700 mb-1.5">Username</label>
+          {{ form.username }}
+          {% if form.username.errors %}
+          <p class="text-xs mt-1" style="color: var(--color-error);">{{ form.username.errors.0 }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Phone -->
+        <div class="mb-4">
+          <label for="reg-phone" class="block text-sm font-medium text-surface-700 mb-1.5">Phone Number</label>
+          {{ form.phone }}
+          {% if form.phone.errors %}
+          <p class="text-xs mt-1" style="color: var(--color-error);">{{ form.phone.errors.0 }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Email (Patient only) -->
+        {% if role == 'patient' %}
+        <div class="mb-4">
+          <label for="reg-email" class="block text-sm font-medium text-surface-700 mb-1.5">
+            Email <span class="text-surface-500 font-normal">(optional)</span>
+          </label>
+          {{ form.email }}
+          {% if form.email.errors %}
+          <p class="text-xs mt-1" style="color: var(--color-error);">{{ form.email.errors.0 }}</p>
+          {% endif %}
+        </div>
+        {% endif %}
+
+        <!-- Password -->
+        <div class="mb-4">
+          <label for="reg-password1" class="block text-sm font-medium text-surface-700 mb-1.5">Password</label>
+          {{ form.password1 }}
+          {% if form.password1.errors %}
+          <p class="text-xs mt-1" style="color: var(--color-error);">{{ form.password1.errors.0 }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="mb-6">
+          <label for="reg-password2" class="block text-sm font-medium text-surface-700 mb-1.5">Confirm Password</label>
+          {{ form.password2 }}
+          {% if form.password2.errors %}
+          <p class="text-xs mt-1" style="color: var(--color-error);">{{ form.password2.errors.0 }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn-primary w-full text-base" id="register-submit-btn">
+          <i data-lucide="user-plus" class="w-5 h-5 mr-2"></i>
+          Create Account
+        </button>
+      </form>
+
+      <!-- Divider -->
+      <div class="flex items-center gap-3 my-6">
+        <div class="flex-1 h-px" style="background: var(--color-surface-300);"></div>
+        <span class="text-xs text-surface-500">OR</span>
+        <div class="flex-1 h-px" style="background: var(--color-surface-300);"></div>
+      </div>
+
+      <!-- Login Link -->
+      <p class="text-center text-sm text-surface-600">
+        Already have an account?
+        <a href="{% url 'login' %}" class="font-semibold text-primary-400 transition-colors" style="text-decoration: underline; text-underline-offset: 3px;" id="goto-login">
+          Sign in
+        </a>
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}

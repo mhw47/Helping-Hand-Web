@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Our Services{% endblock %}
+{% block meta_description %}Helping Hand healthcare services — Nursing Care, Home Care, and One-Time Services. Professional caregivers at affordable rates with weekly and monthly discounts.{% endblock %}
+
+{% block content %}
+<!-- ═══════════════ HEADER ═══════════════ -->
+<section class="pt-24 pb-16" style="background: var(--color-surface-50);">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+    <div class="text-center max-w-2xl mx-auto">
+      <h1 class="text-4xl sm:text-5xl font-extrabold text-surface-900 mb-4">Our Services</h1>
+      <p class="text-lg text-surface-500">Comprehensive healthcare solutions tailored to your needs</p>
+    </div>
+  </div>
+
+  <!-- ═══════════════ SERVICE CARDS ═══════════════ -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+    {% for svc in services_detailed %}
+    <div class="card" style="padding: 0; overflow: hidden;" id="service-{{ svc.key }}">
+      <div class="grid grid-cols-1 lg:grid-cols-2">
+        <!-- Info Panel -->
+        <div class="p-8 lg:p-12">
+          <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-5 {{ svc.bg_class }}">
+            <i data-lucide="{{ svc.icon }}" class="w-7 h-7 {{ svc.icon_class }}"></i>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-surface-900 mb-4">{{ svc.title }}</h2>
+          <p class="text-surface-500 leading-relaxed mb-6">{{ svc.desc }}</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
+            {% for feat in svc.features %}
+            <div class="flex items-center gap-2.5 text-sm text-surface-700">
+              <i data-lucide="check" class="w-4 h-4 shrink-0" style="color: var(--color-primary-400);"></i>
+              {{ feat }}
+            </div>
+            {% endfor %}
+          </div>
+          <a href="{% url 'services' %}" class="btn-primary inline-flex items-center gap-2">
+            Book Now <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </a>
+        </div>
+
+        <!-- Pricing Panel -->
+        <div class="p-8 lg:p-12 flex flex-col justify-center text-white {{ svc.gradient_class }} {% if forloop.counter|divisibleby:2 %}lg:order-first{% endif %}">
+          <h3 class="text-lg font-bold mb-6" style="color: rgba(255,255,255,0.8);">Pricing</h3>
+
+          {% if svc.key != "onetime" %}
+          <div class="space-y-4">
+            <!-- Daily -->
+            <div class="rounded-xl p-4" style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
+              <div class="text-sm mb-1" style="color: rgba(255,255,255,0.7);">Daily (1-6 days)</div>
+              <div class="text-3xl font-extrabold">
+                {{ svc.daily_price }}
+                <span class="text-base font-normal" style="color: rgba(255,255,255,0.7);">/ day</span>
+              </div>
+            </div>
+            <!-- Weekly -->
+            <div class="rounded-xl p-4" style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="text-sm" style="color: rgba(255,255,255,0.7);">Weekly (7-29 days)</span>
+                <span class="px-2 py-0.5 rounded-full text-xs font-bold" style="background: rgba(255,255,255,0.2);">-10%</span>
+              </div>
+              <div class="text-3xl font-extrabold">
+                {{ svc.weekly_price }}
+                <span class="text-base font-normal" style="color: rgba(255,255,255,0.7);">/ day</span>
+              </div>
+            </div>
+            <!-- Monthly -->
+            <div class="rounded-xl p-4" style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="text-sm" style="color: rgba(255,255,255,0.7);">Monthly (30+ days)</span>
+                <span class="px-2 py-0.5 rounded-full text-xs font-bold" style="background: rgba(255,255,255,0.2);">-25%</span>
+              </div>
+              <div class="text-3xl font-extrabold">
+                {{ svc.monthly_price }}
+                <span class="text-base font-normal" style="color: rgba(255,255,255,0.7);">/ day</span>
+              </div>
+            </div>
+          </div>
+          {% else %}
+          <!-- One-time flat rate -->
+          <div class="rounded-xl p-6 text-center" style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
+            <div class="text-sm mb-2" style="color: rgba(255,255,255,0.7);">Per Visit</div>
+            <div class="text-5xl font-extrabold mb-2">{{ svc.daily_price }}</div>
+            <div class="text-sm" style="color: rgba(255,255,255,0.7);">One-time, no commitment</div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- ═══════════════ HIGHLIGHTS ═══════════════ -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {% for h in highlights %}
+      <div class="card text-center">
+        <div class="w-12 h-12 rounded-xl gradient-primary flex items-center justify-center mx-auto mb-4 shadow-lg" style="box-shadow: 0 8px 25px rgba(13, 148, 136, 0.2);">
+          <i data-lucide="{{ h.icon }}" class="w-6 h-6 text-white"></i>
+        </div>
+        <h3 class="font-bold text-surface-900 mb-2">{{ h.title }}</h3>
+        <p class="text-sm text-surface-500">{{ h.desc }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

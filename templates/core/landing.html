@@ -1,0 +1,297 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Home{% endblock %}
+{% block meta_description %}Helping Hand — Professional home healthcare services. Certified nurses, compassionate caregivers, right at your doorstep. Book nursing care, home care, and one-time services.{% endblock %}
+
+{% block content %}
+<!-- ═══════════════ HERO SECTION ═══════════════ -->
+<section class="relative min-h-[90vh] flex items-center gradient-hero overflow-hidden" id="hero">
+  <!-- Background decorations -->
+  <div class="absolute inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute top-20 -right-20 w-96 h-96 rounded-full blur-3xl" style="background: rgba(13, 148, 136, 0.05);"></div>
+    <div class="absolute -bottom-20 -left-20 w-80 h-80 rounded-full blur-3xl" style="background: rgba(16, 185, 129, 0.05);"></div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32 relative z-10 w-full">
+    <div class="max-w-3xl">
+      <!-- Badge -->
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium mb-8 animate-fade-in-up"
+           style="background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.9);">
+        <i data-lucide="shield" class="w-4 h-4"></i>
+        Trusted Home Healthcare
+      </div>
+
+      <!-- Heading -->
+      <h1 class="text-4xl sm:text-5xl lg:text-7xl font-extrabold text-white mb-6 leading-tight animate-fade-in-up delay-100 hero-title">
+        Professional Care,<br>
+        <span style="color: rgba(255,255,255,0.9);">Right at Your Doorstep</span>
+      </h1>
+
+      <!-- Subtitle -->
+      <p class="text-lg sm:text-xl mb-10 max-w-xl leading-relaxed animate-fade-in-up delay-200" style="color: rgba(255,255,255,0.7);">
+        Helping Hand connects you with certified nursing professionals and compassionate caregivers for personalized home healthcare services.
+      </p>
+
+      <!-- CTA Buttons -->
+      <div class="flex flex-wrap gap-4 animate-fade-in-up delay-300">
+        <a href="{% url 'services' %}" class="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-bold text-lg shadow-xl transition-all duration-300 hover:-translate-y-1"
+           style="background: white; color: var(--color-primary-600); box-shadow: 0 10px 25px rgba(0,0,0,0.2);"
+           id="hero-cta-primary">
+          Book a Service
+          <i data-lucide="arrow-right" class="w-5 h-5"></i>
+        </a>
+        <a href="{% url 'services' %}" class="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300"
+           style="background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.15); color: white;"
+           id="hero-cta-secondary">
+          Explore Services
+        </a>
+      </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-16 animate-fade-in-up delay-400">
+      {% for stat in stats %}
+      <div class="stat-card">
+        <i data-lucide="{{ stat.icon }}" class="w-5 h-5 mb-2" style="color: var(--color-primary-400);"></i>
+        <div class="text-2xl sm:text-3xl font-extrabold text-white">{{ stat.value }}</div>
+        <div class="text-sm mt-1" style="color: rgba(255,255,255,0.5);">{{ stat.label }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ SERVICES SECTION ═══════════════ -->
+<section class="py-20 lg:py-28" style="background: var(--color-surface-50);" id="services-section">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center max-w-2xl mx-auto mb-16">
+      <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-4 text-surface-900">Our Services</h2>
+      <p class="text-lg text-surface-500">Comprehensive healthcare solutions tailored to your needs</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+      {% for svc in services %}
+      <div class="card card-hover cursor-pointer group">
+        <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-5 transition-transform duration-300 group-hover:scale-110 {{ svc.bg_class }}">
+          <i data-lucide="{{ svc.icon }}" class="w-7 h-7 {{ svc.icon_class }}"></i>
+        </div>
+        <h3 class="text-xl font-bold text-surface-900 mb-3">{{ svc.title }}</h3>
+        <p class="text-sm leading-relaxed mb-5 text-surface-500">{{ svc.desc }}</p>
+        <div class="flex items-center justify-between pt-4" style="border-top: 1px solid var(--color-surface-300);">
+          <div>
+            <span class="text-xs text-surface-500">Starting from</span>
+            <div class="text-xl font-bold gradient-text">{{ svc.price }}<span class="text-sm font-normal text-surface-500">/day</span></div>
+          </div>
+          <a href="{% url 'services' %}" class="flex items-center gap-1 text-sm font-semibold transition-colors text-primary-400">
+            Learn More <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ HOW IT WORKS ═══════════════ -->
+<section class="py-20 lg:py-28 section-bg-alt" id="how-section">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center max-w-2xl mx-auto mb-16">
+      <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-4 text-surface-900">How It Works</h2>
+      <p class="text-lg text-surface-500">Getting quality healthcare at home is simple</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
+      {% for step in steps %}
+      <div class="relative text-center">
+        <div class="text-6xl font-extrabold mb-4" style="color: var(--color-primary-100);">{{ step.num }}</div>
+        <div class="w-16 h-16 rounded-2xl gradient-primary flex items-center justify-center mx-auto mb-5 shadow-lg" style="box-shadow: 0 8px 25px rgba(13, 148, 136, 0.2);">
+          <i data-lucide="{{ step.icon }}" class="w-7 h-7 text-white"></i>
+        </div>
+        <h3 class="text-xl font-bold text-surface-900 mb-3">{{ step.title }}</h3>
+        <p class="text-sm leading-relaxed max-w-xs mx-auto text-surface-500">{{ step.desc }}</p>
+        {% if not forloop.last %}
+        <div class="hidden md:block absolute top-24 -right-6 lg:-right-8">
+          <i data-lucide="arrow-right" class="w-6 h-6" style="color: var(--color-primary-600);"></i>
+        </div>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ PRICING SECTION ═══════════════ -->
+<section class="py-20 lg:py-28" style="background: var(--color-surface-50);" id="pricing-section">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center max-w-2xl mx-auto mb-16">
+      <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-4 text-surface-900">Transparent Pricing</h2>
+      <p class="text-lg text-surface-500">Affordable plans with discounts for longer commitments</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 max-w-5xl mx-auto">
+      <!-- Daily Plan -->
+      <div class="card text-center">
+        <h3 class="text-lg font-bold text-surface-900 mb-2">Daily</h3>
+        <p class="text-sm text-surface-500 mb-6">1-6 days</p>
+        <div class="space-y-3 mb-6">
+          {% for rate in pricing_rates %}
+          <div class="flex justify-between items-center text-sm">
+            <span class="text-surface-600">{{ rate.label }}</span>
+            <span class="font-bold text-surface-900">{{ rate.daily_formatted }}</span>
+          </div>
+          {% endfor %}
+        </div>
+        <a href="{% url 'services' %}" class="btn-secondary w-full text-sm">Book This Plan</a>
+      </div>
+
+      <!-- Weekly Plan (Featured) -->
+      <div class="card text-center relative pricing-featured">
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full gradient-primary text-white text-xs font-bold">Most Popular</div>
+        <h3 class="text-lg font-bold text-surface-900 mb-2">Weekly</h3>
+        <p class="text-sm text-surface-500 mb-1">7-29 days</p>
+        <div class="badge badge-success mx-auto mb-5">Save 10%</div>
+        <div class="space-y-3 mb-6">
+          {% for rate in pricing_rates %}
+          {% if rate.key != "onetime" %}
+          <div class="flex justify-between items-center text-sm">
+            <span class="text-surface-600">{{ rate.label }}</span>
+            <div class="flex items-center gap-2">
+              <span class="text-surface-500 line-through text-xs">{{ rate.daily_formatted }}</span>
+              <span class="font-bold text-primary-400">{{ rate.weekly_formatted }}</span>
+            </div>
+          </div>
+          {% endif %}
+          {% endfor %}
+        </div>
+        <a href="{% url 'services' %}" class="btn-primary w-full text-sm">Book This Plan</a>
+      </div>
+
+      <!-- Monthly Plan -->
+      <div class="card text-center relative">
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-xs font-bold" style="background: var(--color-accent-500); color: #451a03;">Best Value</div>
+        <h3 class="text-lg font-bold text-surface-900 mb-2">Monthly</h3>
+        <p class="text-sm text-surface-500 mb-1">30+ days</p>
+        <div class="badge badge-success mx-auto mb-5">Save 25%</div>
+        <div class="space-y-3 mb-6">
+          {% for rate in pricing_rates %}
+          {% if rate.key != "onetime" %}
+          <div class="flex justify-between items-center text-sm">
+            <span class="text-surface-600">{{ rate.label }}</span>
+            <div class="flex items-center gap-2">
+              <span class="text-surface-500 line-through text-xs">{{ rate.daily_formatted }}</span>
+              <span class="font-bold text-primary-400">{{ rate.monthly_formatted }}</span>
+            </div>
+          </div>
+          {% endif %}
+          {% endfor %}
+        </div>
+        <a href="{% url 'services' %}" class="btn-primary w-full text-sm" style="background: linear-gradient(135deg, var(--color-accent-500), #f97316);">Book This Plan</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ TESTIMONIALS ═══════════════ -->
+<section class="py-20 lg:py-28 section-bg-alt" id="testimonials-section">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center max-w-2xl mx-auto mb-16">
+      <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-4 text-surface-900">What Our Clients Say</h2>
+      <p class="text-lg text-surface-500">Real stories from families we've helped</p>
+    </div>
+
+    <div class="max-w-2xl mx-auto">
+      <div class="card" style="padding: 2rem 2.5rem;" id="testimonial-card">
+        <div class="text-5xl mb-4" style="color: var(--color-primary-600);">"</div>
+        <p class="text-lg leading-relaxed mb-6 italic text-surface-700" id="testimonial-text">
+          {{ testimonials.0.text }}
+        </p>
+        <div class="flex items-center justify-center gap-1 mb-3" id="testimonial-stars">
+          {% for i in "12345" %}
+          <i data-lucide="star" class="w-5 h-5" style="color: var(--color-accent-400); fill: var(--color-accent-400);"></i>
+          {% endfor %}
+        </div>
+        <div class="font-bold text-surface-900 text-center" id="testimonial-name">{{ testimonials.0.name }}</div>
+        <div class="text-sm text-surface-500 text-center" id="testimonial-meta">{{ testimonials.0.location }} • {{ testimonials.0.service }}</div>
+
+        <!-- Navigation -->
+        <div class="flex justify-center gap-3 mt-6">
+          <button onclick="prevTestimonial()" class="w-10 h-10 rounded-full flex items-center justify-center transition-colors cursor-pointer" style="background: var(--color-surface-300);">
+            <i data-lucide="chevron-left" class="w-5 h-5 text-surface-700"></i>
+          </button>
+          <button onclick="nextTestimonial()" class="w-10 h-10 rounded-full flex items-center justify-center transition-colors cursor-pointer" style="background: var(--color-surface-300);">
+            <i data-lucide="chevron-right" class="w-5 h-5 text-surface-700"></i>
+          </button>
+        </div>
+        <!-- Dots -->
+        <div class="flex justify-center gap-2 mt-4" id="testimonial-dots">
+          {% for t in testimonials %}
+          <button onclick="setTestimonial({{ forloop.counter0 }})" class="testimonial-dot {% if forloop.first %}active{% endif %}" data-index="{{ forloop.counter0 }}"></button>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ CTA BANNER ═══════════════ -->
+<section class="py-16 gradient-hero relative overflow-hidden">
+  <div class="absolute inset-0 pointer-events-none">
+    <div class="absolute top-0 right-0 w-64 h-64 rounded-full blur-3xl" style="background: rgba(13, 148, 136, 0.05);"></div>
+    <div class="absolute bottom-0 left-0 w-48 h-48 rounded-full blur-3xl" style="background: rgba(16, 185, 129, 0.05);"></div>
+  </div>
+  <div class="max-w-4xl mx-auto px-4 text-center relative z-10">
+    <h2 class="text-3xl sm:text-4xl font-extrabold text-white mb-4">Ready to Get Started?</h2>
+    <p class="text-lg mb-8 max-w-xl mx-auto" style="color: rgba(255,255,255,0.7);">Book your first service today and experience the Helping Hand difference.</p>
+    <a href="{% url 'services' %}" class="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-bold text-lg shadow-xl transition-all duration-300 hover:-translate-y-1"
+       style="background: white; color: var(--color-primary-600);"
+       id="cta-banner-btn">
+      Book a Service <i data-lucide="arrow-right" class="w-5 h-5"></i>
+    </a>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  // Testimonial carousel
+  const testimonials = {{ testimonials_json|safe }};
+  let currentIndex = 0;
+
+  function updateTestimonial(index) {
+    const t = testimonials[index];
+    document.getElementById('testimonial-text').textContent = t.text;
+    document.getElementById('testimonial-name').textContent = t.name;
+    document.getElementById('testimonial-meta').textContent = t.location + ' • ' + t.service;
+
+    // Update stars
+    const starsHtml = Array.from({length: 5}, (_, i) =>
+      `<i data-lucide="star" class="w-5 h-5" style="color: ${i < t.rating ? 'var(--color-accent-400)' : 'var(--color-surface-400)'}; fill: ${i < t.rating ? 'var(--color-accent-400)' : 'none'};"></i>`
+    ).join('');
+    document.getElementById('testimonial-stars').innerHTML = starsHtml;
+
+    // Update dots
+    document.querySelectorAll('.testimonial-dot').forEach((dot, i) => {
+      dot.classList.toggle('active', i === index);
+    });
+
+    currentIndex = index;
+    lucide.createIcons();
+  }
+
+  function nextTestimonial() {
+    updateTestimonial((currentIndex + 1) % testimonials.length);
+  }
+
+  function prevTestimonial() {
+    updateTestimonial((currentIndex - 1 + testimonials.length) % testimonials.length);
+  }
+
+  function setTestimonial(index) {
+    updateTestimonial(index);
+  }
+
+  // Auto-rotate every 5 seconds
+  setInterval(nextTestimonial, 5000);
+</script>
+{% endblock %}

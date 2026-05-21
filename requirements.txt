@@ -1,0 +1,16 @@
+# Helping Hand — Direct Dependencies
+
+# Core framework
+Django>=4.2,<6.0
+
+# PostgreSQL adapter
+psycopg2-binary>=2.9
+
+# Environment variables (.env support)
+python-dotenv>=1.0
+
+# Django developer utilities (shell_plus, runserver_plus, etc.)
+django-extensions>=3.2
+
+# Image handling (required by ImageField in StaffProfile)
+Pillow>=10.0
