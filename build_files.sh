@@ -1,14 +1,14 @@
 #!/bin/bash
-set -e
 echo "BUILD START"
 
-# Ensure the directory exists
+# Create fallback directory
 mkdir -p staticfiles_build/static
 
 echo "Installing requirements..."
-python3 -m pip install -r requirements.txt
+# Added --no-cache-dir and --disable-pip-version-check flags to bypass environment freezes
+python3 -m pip install --no-cache-dir --disable-pip-version-check -r requirements.txt || { echo 'Pip install failed'; exit 1; }
 
-echo "Collecting static files (using test_settings to bypass DB connection requirements)..."
-python3 manage.py collectstatic --noinput --clear --settings=helpinghand.test_settings
+echo "Running Django collectstatic..."
+python3 manage.py collectstatic --noinput --clear || { echo 'Collectstatic failed'; exit 1; }
 
 echo "BUILD END"
