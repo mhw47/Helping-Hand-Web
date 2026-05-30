@@ -2,11 +2,13 @@
 set -e
 echo "BUILD START"
 
-# Ensure the directory exists so Vercel doesn't fail the build immediately if the script crashes
+# Ensure the directory exists
 mkdir -p staticfiles_build/static
 
-# Use generic python3 to avoid version-specific missing binary errors
+echo "Installing requirements..."
 python3 -m pip install -r requirements.txt
-python3 manage.py collectstatic --noinput --clear
+
+echo "Collecting static files (using test_settings to bypass DB connection requirements)..."
+python3 manage.py collectstatic --noinput --clear --settings=helpinghand.test_settings
 
 echo "BUILD END"
