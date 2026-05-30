@@ -7,16 +7,18 @@ Phase 3: Authentication — Registration and Login forms.
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
-from .models import User
+from .models import User, Booking
 
 
-class PatientRegistrationForm(UserCreationForm):
+class BaseRegistrationForm(UserCreationForm):
     """
-    Registration form for Patient accounts.
+    Shared registration form for all user roles.
 
-    Extends Django's UserCreationForm with phone number (mandatory)
-    and full name fields. Role is auto-set to PATIENT.
+    Contains common fields (name, phone, username, passwords) and widget
+    styling. Subclasses only need to set ROLE and add role-specific fields.
     """
+
+    ROLE = None  # Subclasses MUST override
 
     first_name = forms.CharField(
         max_length=150,
@@ -50,19 +52,10 @@ class PatientRegistrationForm(UserCreationForm):
         }),
         help_text='Your primary contact number (10 digits).',
     )
-    email = forms.EmailField(
-        required=False,
-        widget=forms.EmailInput(attrs={
-            'class': 'input-field',
-            'placeholder': 'Email address (optional)',
-            'id': 'reg-email',
-            'autocomplete': 'email',
-        }),
-    )
 
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'phone', 'email',
+        fields = ['username', 'first_name', 'last_name', 'phone',
                   'password1', 'password2']
         widgets = {
             'username': forms.TextInput(attrs={
@@ -75,7 +68,7 @@ class PatientRegistrationForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Style the password fields
+        # Style the password fields once for all roles
         self.fields['password1'].widget = forms.PasswordInput(attrs={
             'class': 'input-field',
             'placeholder': 'Create a password',
@@ -90,82 +83,38 @@ class PatientRegistrationForm(UserCreationForm):
         })
 
     def save(self, commit=True):
-        """Set role to PATIENT on save."""
+        """Set role from the class-level ROLE constant."""
         user = super().save(commit=False)
-        user.role = User.Role.PATIENT
+        user.role = self.ROLE
         if commit:
             user.save()
         return user
 
 
-class AgencyRegistrationForm(UserCreationForm):
-    """
-    Registration form for Agency Manager accounts.
+class PatientRegistrationForm(BaseRegistrationForm):
+    """Registration form for Patient accounts. Adds optional email."""
 
-    Same fields as Patient but auto-sets role to AGENCY.
-    Kept separate for clarity and potential future field differences.
-    """
+    ROLE = User.Role.PATIENT
 
-    first_name = forms.CharField(
-        max_length=150,
-        required=True,
-        widget=forms.TextInput(attrs={
+    email = forms.EmailField(
+        required=False,
+        widget=forms.EmailInput(attrs={
             'class': 'input-field',
-            'placeholder': 'First name',
-            'id': 'reg-first-name',
-        }),
-    )
-    last_name = forms.CharField(
-        max_length=150,
-        required=True,
-        widget=forms.TextInput(attrs={
-            'class': 'input-field',
-            'placeholder': 'Last name',
-            'id': 'reg-last-name',
-        }),
-    )
-    phone = forms.CharField(
-        max_length=15,
-        required=True,
-        widget=forms.TextInput(attrs={
-            'class': 'input-field',
-            'placeholder': '10-digit phone number',
-            'id': 'reg-phone',
-            'inputmode': 'numeric',
+            'placeholder': 'Email address (optional)',
+            'id': 'reg-email',
+            'autocomplete': 'email',
         }),
     )
 
-    class Meta:
-        model = User
-        fields = ['username', 'first_name', 'last_name', 'phone',
+    class Meta(BaseRegistrationForm.Meta):
+        fields = ['username', 'first_name', 'last_name', 'phone', 'email',
                   'password1', 'password2']
-        widgets = {
-            'username': forms.TextInput(attrs={
-                'class': 'input-field',
-                'placeholder': 'Choose a username',
-                'id': 'reg-username',
-            }),
-        }
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['password1'].widget = forms.PasswordInput(attrs={
-            'class': 'input-field',
-            'placeholder': 'Create a password',
-            'id': 'reg-password1',
-        })
-        self.fields['password2'].widget = forms.PasswordInput(attrs={
-            'class': 'input-field',
-            'placeholder': 'Confirm password',
-            'id': 'reg-password2',
-        })
 
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        user.role = User.Role.AGENCY
-        if commit:
-            user.save()
-        return user
+class AgencyRegistrationForm(BaseRegistrationForm):
+    """Registration form for Agency Manager accounts."""
+
+    ROLE = User.Role.AGENCY
 
 
 class HelpingHandLoginForm(AuthenticationForm):
@@ -247,3 +196,40 @@ class ProfileCompletionForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+
+
+class BookingForm(forms.ModelForm):
+    """
+    Form for creating a new healthcare service booking.
+    """
+    
+    start_date = forms.DateField(
+        widget=forms.DateInput(attrs={
+            'class': 'input-field',
+            'type': 'date'
+        })
+    )
+
+    class Meta:
+        model = Booking
+        fields = [
+            'patient_name', 'patient_gender', 'patient_age',
+            'symptoms', 'illnesses', 'conditions',
+            'start_date', 'duration_days',
+            'address', 'city', 'pincode', 'phone',
+            'discharge_file'
+        ]
+        widgets = {
+            'patient_name': forms.TextInput(attrs={'class': 'input-field', 'placeholder': 'Patient Full Name'}),
+            'patient_gender': forms.Select(attrs={'class': 'input-field'}),
+            'patient_age': forms.NumberInput(attrs={'class': 'input-field', 'placeholder': 'Age'}),
+            'symptoms': forms.Textarea(attrs={'class': 'input-field', 'rows': 3, 'placeholder': 'Describe symptoms...'}),
+            'illnesses': forms.Textarea(attrs={'class': 'input-field', 'rows': 2, 'placeholder': 'Any pre-existing illnesses?'}),
+            'conditions': forms.Textarea(attrs={'class': 'input-field', 'rows': 2, 'placeholder': 'Current conditions or special requirements'}),
+            'duration_days': forms.NumberInput(attrs={'class': 'input-field', 'placeholder': 'Number of days'}),
+            'address': forms.Textarea(attrs={'class': 'input-field', 'rows': 2, 'placeholder': 'Service Address'}),
+            'city': forms.TextInput(attrs={'class': 'input-field', 'placeholder': 'City'}),
+            'pincode': forms.TextInput(attrs={'class': 'input-field', 'placeholder': 'PIN code'}),
+            'phone': forms.TextInput(attrs={'class': 'input-field', 'placeholder': 'Contact phone for booking'}),
+            'discharge_file': forms.FileInput(attrs={'class': 'input-field'})
+        }

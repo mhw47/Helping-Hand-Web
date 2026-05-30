@@ -34,7 +34,7 @@
             </div>
             {% endfor %}
           </div>
-          <a href="{% url 'services' %}" class="btn-primary inline-flex items-center gap-2">
+          <a href="{% url 'book_service' service_type=svc.key %}" class="btn-primary inline-flex items-center gap-2">
             Book Now <i data-lucide="arrow-right" class="w-4 h-4"></i>
           </a>
         </div>

@@ -29,6 +29,22 @@ from .validators import phone_validator, pincode_validator
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════════════════════════
+# SHARED ENUMS — used by StaffProfile, Booking, and views
+# ═══════════════════════════════════════════════════════════════════════════════
+
+class Gender(models.TextChoices):
+    MALE = 'male', 'Male'
+    FEMALE = 'female', 'Female'
+
+
+class ServiceType(models.TextChoices):
+    NURSING = 'nursing', 'Nursing Care'
+    HOMECARE = 'homecare', 'Home Care'
+    ONETIME = 'onetime', 'One-Time Service'
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
 # USER MODEL
 # ═══════════════════════════════════════════════════════════════════════════════
 
@@ -127,14 +143,7 @@ class StaffProfile(models.Model):
     Uses JSONField for specializations and service types (works on all DB backends).
     """
 
-    class Gender(models.TextChoices):
-        MALE = 'male', 'Male'
-        FEMALE = 'female', 'Female'
-
-    class ServiceType(models.TextChoices):
-        NURSING = 'nursing', 'Nursing Care'
-        HOMECARE = 'homecare', 'Home Care'
-        ONETIME = 'onetime', 'One-Time Service'
+    # Use module-level Gender and ServiceType enums
 
     # Identity
     name = models.CharField(max_length=200)
@@ -195,7 +204,7 @@ class StaffProfile(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     # Custom manager
-    objects = StaffProfileManager()
+    objects = StaffProfileManager
 
     class Meta:
         verbose_name = 'Staff Profile'
@@ -208,7 +217,7 @@ class StaffProfile(models.Model):
     def clean(self):
         super().clean()
         # Validate that service_types contain only valid choices
-        valid_types = {choice[0] for choice in self.ServiceType.choices}
+        valid_types = {choice[0] for choice in ServiceType.choices}
         if self.service_types:
             invalid = set(self.service_types) - valid_types
             if invalid:
@@ -244,10 +253,7 @@ class Booking(models.Model):
         COMPLETED = 'completed', 'Completed'
         CANCELLED = 'cancelled', 'Cancelled'
 
-    class ServiceType(models.TextChoices):
-        NURSING = 'nursing', 'Nursing Care'
-        HOMECARE = 'homecare', 'Home Care'
-        ONETIME = 'onetime', 'One-Time Service'
+    # Use module-level ServiceType enum
 
     # ── Booking Identifier ─────────────────────────────────────────────────
     booking_id = models.CharField(
@@ -284,7 +290,7 @@ class Booking(models.Model):
     patient_name = models.CharField(max_length=200)
     patient_gender = models.CharField(
         max_length=10,
-        choices=StaffProfile.Gender.choices,
+        choices=Gender.choices,
     )
     patient_age = models.PositiveIntegerField(
         validators=[MinValueValidator(16)],
@@ -363,7 +369,7 @@ class Booking(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     # Custom manager
-    objects = BookingManager()
+    objects = BookingManager
 
     class Meta:
         verbose_name = 'Booking'
@@ -411,7 +417,7 @@ class Booking(models.Model):
     def _compute_pricing(self):
         """Compute and set all pricing fields based on service_type and duration_days."""
         # Force one-time services to 1 day
-        if self.service_type == self.ServiceType.ONETIME:
+        if self.service_type == ServiceType.ONETIME:
             self.duration_days = 1
 
         pricing = calculate_price(self.service_type, self.duration_days)
@@ -432,13 +438,17 @@ class Booking(models.Model):
             elif self.status not in [s[0] for s in self.Status.choices]:
                 self.status = self.Status.PENDING
 
+    _PRICING_FIELDS = ('service_type', 'duration_days')
+
     def save(self, *args, **kwargs):
         """
         Override save to:
         1. Auto-generate booking_id for new bookings
-        2. Compute pricing fields
+        2. Compute pricing fields (only when relevant fields change)
         3. Determine initial status
         """
+        is_new = not self.pk
+
         # Generate booking ID for new records
         if not self.booking_id:
             self.booking_id = self._generate_booking_id()
@@ -446,11 +456,19 @@ class Booking(models.Model):
             while Booking.objects.filter(booking_id=self.booking_id).exists():
                 self.booking_id = self._generate_booking_id()
 
-        # Always recompute pricing
-        self._compute_pricing()
+        # Only recompute pricing for new bookings or when pricing fields change
+        if is_new:
+            self._compute_pricing()
+        else:
+            try:
+                old = Booking.objects.only(*self._PRICING_FIELDS).get(pk=self.pk)
+                if any(getattr(old, f) != getattr(self, f) for f in self._PRICING_FIELDS):
+                    self._compute_pricing()
+            except Booking.DoesNotExist:
+                self._compute_pricing()
 
         # Determine status for new bookings
-        if not self.pk:
+        if is_new:
             self._determine_initial_status()
 
         super().save(*args, **kwargs)

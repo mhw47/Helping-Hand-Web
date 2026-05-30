@@ -130,3 +130,32 @@ def format_currency(amount) -> str:
     """
     amount = int(amount)
     return f'₹{amount:,}'
+
+
+def get_tiered_prices(service_type: str) -> Optional[dict]:
+    """
+    Return daily, weekly, and monthly prices for a service type.
+
+    Uses the actual discount tiers from DISCOUNT_TIERS so that pricing
+    stays consistent across the codebase (no hardcoded multipliers).
+
+    >>> result = get_tiered_prices('nursing')
+    >>> result['daily']
+    Decimal('1500')
+    >>> result['weekly']
+    1350
+    >>> result['monthly']
+    1125
+    """
+    rate = SERVICE_RATES.get(service_type)
+    if not rate:
+        return None
+    daily = rate['daily']
+    weekly_discount = DISCOUNT_TIERS['weekly']['discount']
+    monthly_discount = DISCOUNT_TIERS['monthly']['discount']
+    return {
+        'daily': daily,
+        'weekly': int(daily * (1 - weekly_discount)),
+        'monthly': int(daily * (1 - monthly_discount)),
+        'label': rate['label'],
+    }

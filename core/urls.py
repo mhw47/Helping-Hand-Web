@@ -12,6 +12,9 @@ urlpatterns = [
     path('services/', views.ServicesView.as_view(), name='services'),
     path('support/', views.SupportView.as_view(), name='support'),
 
+    # ── Services / Booking ───────────────────────────────────────────────────
+    path('book/<str:service_type>/', views.BookingCreateView.as_view(), name='book_service'),
+
     # ── Authentication ─────────────────────────────────────────────────────
     path('auth/login/', views.CustomLoginView.as_view(), name='login'),
     path('auth/register/', views.RegisterView.as_view(), name='register'),

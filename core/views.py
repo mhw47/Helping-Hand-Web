@@ -10,16 +10,19 @@ from decimal import Decimal
 
 from django.contrib import messages
 from django.contrib.auth import login
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import FormView, TemplateView
+from django.views.generic import FormView, TemplateView, CreateView
 
 from .forms import (
     PatientRegistrationForm,
     AgencyRegistrationForm,
     HelpingHandLoginForm,
+    BookingForm,
 )
+from .models import Booking
 from .pricing import SERVICE_RATES, format_currency
 
 
@@ -339,4 +342,48 @@ class CustomLogoutView(LogoutView):
     def dispatch(self, request, *args, **kwargs):
         messages.info(request, 'You have been logged out successfully.')
         return super().dispatch(request, *args, **kwargs)
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# BOOKING VIEWS
+# ═══════════════════════════════════════════════════════════════════════════════
+
+class BookingCreateView(LoginRequiredMixin, CreateView):
+    """
+    View for users to create a booking for a specific service.
+    """
+    model = Booking
+    form_class = BookingForm
+    template_name = 'core/book.html'
+    success_url = reverse_lazy('landing')  # Redirect to landing for now
+
+    def get_initial(self):
+        initial = super().get_initial()
+        # Pre-fill with user details if available
+        user = self.request.user
+        initial['patient_name'] = user.get_full_name()
+        initial['phone'] = user.phone
+        initial['address'] = user.address
+        initial['city'] = user.city
+        initial['pincode'] = user.pincode
+        return initial
+
+    def form_valid(self, form):
+        form.instance.patient = self.request.user
+        form.instance.service_type = self.kwargs.get('service_type')
+        messages.success(self.request, 'Your booking has been successfully placed! We will review it shortly.')
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        service_type = self.kwargs.get('service_type')
+        ctx['service_type'] = service_type
+        # Add some readable title
+        service_titles = {
+            'nursing': 'Nursing Care',
+            'homecare': 'Home Care',
+            'onetime': 'One-Time Service',
+        }
+        ctx['service_title'] = service_titles.get(service_type, 'Service')
+        return ctx
 

@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Book {{ service_title }}{% endblock %}
+
+{% block content %}
+<section class="pt-24 pb-16" style="background: var(--color-surface-50); min-height: 100vh;">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="card p-8 sm:p-12">
+      <div class="text-center mb-10">
+        <h1 class="text-3xl font-extrabold text-surface-900 mb-2">Book {{ service_title }}</h1>
+        <p class="text-surface-500">Please provide the necessary details for your booking.</p>
+      </div>
+
+      <form method="post" enctype="multipart/form-data" class="space-y-6">
+        {% csrf_token %}
+        
+        {% if form.non_field_errors %}
+          <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50" role="alert">
+            {% for error in form.non_field_errors %}
+              <p>{{ error }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <!-- Patient Name -->
+          <div>
+            <label for="{{ form.patient_name.id_for_label }}" class="block text-sm font-semibold text-surface-700 mb-2">Patient Name *</label>
+            {{ form.patient_name }}
+            <div class="text-red-500 text-sm">{{ form.patient_name.errors }}</div>
+          </div>
+          
+          <!-- Patient Gender -->
+          <div>
+            <label for="{{ form.patient_gender.id_for_label }}" class="block text-sm font-semibold text-surface-700 mb-2">Patient Gender *</label>
+            {{ form.patient_gender }}
+            <div class="text-red-500 text-sm">{{ form.patient_gender.errors }}</div>
+          </div>
+          
+          <!-- Patient Age -->
+          <div>
+            <label for="{{ form.patient_age.id_for_label }}" class="block text-sm font-semibold text-surface-700 mb-2">Patient Age *</label>
+            {{ form.patient_age }}
+            <div class="text-red-500 text-sm">{{ form.patient_age.errors }}</div>
+          </div>
+          
+          <!-- Phone -->
+          <div>
+            <label for="{{ form.phone.id_for_label }}" class="block text-sm font-semibold text-surface-700 mb-2">Contact Phone *</label>
+            {{ form.phone }}
+            <div class="text-red-500 text-sm">{{ form.phone.errors }}</div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <!-- Start Date -->
+          <div>
+            <label for="{{ form.start_date.id_for_label }}" class="block text-sm font-semibold text-surface-700 mb-2">Start Date *</label>
+            {{ form.start_date }}
+            <div class="text-red-500 text-sm">{{ form.start_date.errors }}</div>
+          </div>
+          
+          <!-- Duration -->
+          <div>
+            <label for="{{ form.duration_days.id_for_label }}" class="block text-sm font-semibold text-surface-700 mb-2">Duration (Days) *</label>
+            {{ form.duration_days }}
+            <div class="text-red-500 text-sm">{{ form.duration_days.errors }}</div>
+          </div>
+        </div>
+
+        <!-- Symptoms -->
+        <div>
+          <label for="{{ form.symptoms.id_for_label }}" class="block text-sm font-semibold text-surface-700 mb-2">Symptoms</label>
+          {{ form.symptoms }}
+          <div class="text-red-500 text-sm">{{ form.symptoms.errors }}</div>
+        </div>
+        
+        <!-- Illnesses -->
+        <div>
+          <label for="{{ form.illnesses.id_for_label }}" class="block text-sm font-semibold text-surface-700 mb-2">Pre-existing Illnesses</label>
+          {{ form.illnesses }}
+          <div class="text-red-500 text-sm">{{ form.illnesses.errors }}</div>
+        </div>
+        
+        <!-- Conditions -->
+        <div>
+          <label for="{{ form.conditions.id_for_label }}" class="block text-sm font-semibold text-surface-700 mb-2">Current Conditions</label>
+          {{ form.conditions }}
+          <div class="text-red-500 text-sm">{{ form.conditions.errors }}</div>
+        </div>
+        
+        <!-- Address -->
+        <div>
+          <label for="{{ form.address.id_for_label }}" class="block text-sm font-semibold text-surface-700 mb-2">Service Address *</label>
+          {{ form.address }}
+          <div class="text-red-500 text-sm">{{ form.address.errors }}</div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <!-- City -->
+          <div>
+            <label for="{{ form.city.id_for_label }}" class="block text-sm font-semibold text-surface-700 mb-2">City *</label>
+            {{ form.city }}
+            <div class="text-red-500 text-sm">{{ form.city.errors }}</div>
+          </div>
+          
+          <!-- Pincode -->
+          <div>
+            <label for="{{ form.pincode.id_for_label }}" class="block text-sm font-semibold text-surface-700 mb-2">PIN Code *</label>
+            {{ form.pincode }}
+            <div class="text-red-500 text-sm">{{ form.pincode.errors }}</div>
+          </div>
+        </div>
+        
+        <!-- Discharge File -->
+        <div>
+          <label for="{{ form.discharge_file.id_for_label }}" class="block text-sm font-semibold text-surface-700 mb-2">Discharge Summary / Medical Docs (Optional)</label>
+          {{ form.discharge_file }}
+          <div class="text-red-500 text-sm">{{ form.discharge_file.errors }}</div>
+          <p class="text-xs text-surface-500 mt-1">If available, upload a hospital discharge file to help us match the right staff.</p>
+        </div>
+
+        <div class="pt-4">
+          <button type="submit" class="btn-primary w-full justify-center">
+            Confirm Booking Request
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

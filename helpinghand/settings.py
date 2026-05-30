@@ -21,7 +21,7 @@ SECRET_KEY = os.getenv(
 
 DEBUG = os.getenv('DJANGO_DEBUG', 'True').lower() in ('true', '1', 'yes')
 
-ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',') + ['.vercel.app']
 
 # ─── Applications ─────────────────────────────────────────────────────────────
 INSTALLED_APPS = [
@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 # ─── Middleware ────────────────────────────────────────────────────────────────
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -77,11 +78,12 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.getenv('DB_NAME', 'helpinghand'),
         'USER': os.getenv('DB_USER', 'postgres'),
-        'PASSWORD': os.getenv('DB_PASSWORD', 'postgres'),
+        'PASSWORD': os.getenv('DB_PASSWORD', 'mohmaya420'),
         'HOST': os.getenv('DB_HOST', 'localhost'),
         'PORT': os.getenv('DB_PORT', '5432'),
         'OPTIONS': {
             'connect_timeout': 5,
+            'sslmode': 'require',
         },
     }
 }
@@ -111,7 +113,7 @@ USE_TZ = True
 # ─── Static Files ─────────────────────────────────────────────────────────────
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT = BASE_DIR / 'staticfiles_build' / 'static'
 
 # ─── Media Files ───────────────────────────────────────────────────────────────
 MEDIA_URL = 'media/'
