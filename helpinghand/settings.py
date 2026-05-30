@@ -21,7 +21,12 @@ SECRET_KEY = os.getenv(
 
 DEBUG = os.getenv('DJANGO_DEBUG', 'True').lower() in ('true', '1', 'yes')
 
-ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    '.vercel.app',  # The dot prefix acts as a wildcard matching all subdomains
+    'your-project-name.vercel.app',  # Your specific Vercel URL
+]
 
 # ─── Applications ─────────────────────────────────────────────────────────────
 INSTALLED_APPS = [
