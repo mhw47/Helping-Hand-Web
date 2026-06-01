@@ -72,10 +72,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'helpinghand.wsgi.application'
 
+import dj_database_url
+
 # ─── Database ──────────────────────────────────────────────────────────────────
-# During the Vercel build step, network access to databases is blocked. 
-# We swap to SQLite temporarily during the build phase to let collectstatic pass.
-if os.getenv('VERCEL') == '1' and not os.getenv('DB_HOST'):
+# Use Vercel/Supabase connection string if available
+db_url = os.getenv('POSTGRES_URL') or os.getenv('DATABASE_URL')
+
+if db_url:
+    DATABASES = {
+        'default': dj_database_url.parse(db_url, conn_max_age=600, ssl_require=True)
+    }
+elif os.getenv('VERCEL') == '1' and not os.getenv('DB_HOST'):
+    # Fallback to SQLite during Vercel build step (if not using test_settings)
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -83,6 +91,7 @@ if os.getenv('VERCEL') == '1' and not os.getenv('DB_HOST'):
         }
     }
 else:
+    # Local development or traditional Docker/Env configuration
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',

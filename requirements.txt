@@ -17,3 +17,6 @@ Pillow>=10.0
 
 # Static file serving (Vercel)
 whitenoise>=6.6.0
+
+# Database URL parsing (Supabase / Vercel integration)
+dj-database-url>=2.1.0
