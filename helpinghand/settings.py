@@ -79,8 +79,18 @@ import dj_database_url
 db_url = os.getenv('POSTGRES_URL') or os.getenv('DATABASE_URL')
 
 if db_url:
+    config = dj_database_url.parse(db_url, conn_max_age=600, ssl_require=True)
+    
+    # Vercel's Supabase Integration adds custom query parameters that crash psycopg2.
+    # We must remove them from the OPTIONS dictionary before Django connects.
+    if 'OPTIONS' in config:
+        config['OPTIONS'].pop('supa', None)
+        config['OPTIONS'].pop('pgbouncer', None)
+        config['OPTIONS'].pop('connection_limit', None)
+        config['OPTIONS'].pop('pool_timeout', None)
+
     DATABASES = {
-        'default': dj_database_url.parse(db_url, conn_max_age=600, ssl_require=True)
+        'default': config
     }
 elif os.getenv('VERCEL') == '1' and not os.getenv('DB_HOST'):
     # Fallback to SQLite during Vercel build step (if not using test_settings)
