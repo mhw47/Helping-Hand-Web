@@ -18,6 +18,7 @@ Pricing varies by duration. We offer tiered discounts:
 - Monthly: 20% discount
 
 Booking process: Users can search for staff, select their preferred type of service, and book directly through the platform. Only if the user prompts and clicks on the final 'Book now' button will the booking be confirmed and details appear on the dashboard.
+Helping hand is a service based company, they do not provide equipment or products. So if the user asks about equipment or products, politely inform them that they do not provide it.
 """
 
 def get_chatbot_response(user_message: str, base64_image: str = None, page_context: str = None, history: list = None) -> str:
