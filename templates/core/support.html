@@ -159,6 +159,9 @@
     });
 
     document.getElementById('faq-no-results').classList.toggle('hidden', visibleCount > 0);
+<!-- Chatbot is only available on the support page -->
+{% include "core/_chatbot.html" %}
+
   }
 </script>
 {% endblock %}

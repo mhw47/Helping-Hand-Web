@@ -14,7 +14,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import FormView, TemplateView, CreateView
+from django.views.generic import FormView, TemplateView, CreateView, View
+from django.http import JsonResponse
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
 from .forms import (
     PatientRegistrationForm,
@@ -386,4 +389,33 @@ class BookingCreateView(LoginRequiredMixin, CreateView):
         }
         ctx['service_title'] = service_titles.get(service_type, 'Service')
         return ctx
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# CHATBOT API
+# ═══════════════════════════════════════════════════════════════════════════════
+
+from helpinghand.chat import get_chatbot_response
+
+class ChatbotAPIView(View):
+    """
+    API endpoint for the multimodal support chatbot.
+    Receives JSON with 'message' and optional 'image' (base64 string),
+    calls the LangChain Gemini model, and returns the response.
+    """
+    def post(self, request, *args, **kwargs):
+        try:
+            data = json.loads(request.body)
+            user_message = data.get('message', '')
+            base64_image = data.get('image', None)
+            
+            if not user_message and not base64_image:
+                return JsonResponse({'error': 'Message or image is required'}, status=400)
+                
+            ai_response = get_chatbot_response(user_message, base64_image)
+            return JsonResponse({'response': ai_response})
+            
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON'}, status=400)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
 

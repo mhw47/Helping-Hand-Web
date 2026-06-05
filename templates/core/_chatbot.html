@@ -1,0 +1,251 @@
+<!-- Floating Chatbot Widget -->
+<div id="chatbot-widget" class="fixed bottom-6 right-6 z-50">
+    <!-- Chatbot Toggle Button -->
+    <button id="chatbot-toggle" class="w-14 h-14 rounded-full gradient-primary shadow-lg flex items-center justify-center text-white hover:scale-105 transition-transform">
+        <i data-lucide="message-square" class="w-6 h-6"></i>
+    </button>
+
+    <!-- Chatbot Window -->
+    <div id="chatbot-window" class="hidden absolute bottom-16 right-0 w-80 sm:w-96 bg-white rounded-2xl shadow-2xl border border-gray-100 flex-col overflow-hidden" style="height: 500px; max-height: 80vh;">
+        <!-- Header -->
+        <div class="gradient-primary p-4 text-white flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <i data-lucide="bot" class="w-5 h-5"></i>
+                <h3 class="font-bold">Support Assistant</h3>
+            </div>
+            <button id="chatbot-close" class="text-white hover:text-gray-200">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+
+        <!-- Messages Area -->
+        <div id="chatbot-messages" class="flex-1 p-4 overflow-y-auto bg-gray-50 flex flex-col gap-3">
+            <div class="flex gap-2">
+                <div class="w-8 h-8 rounded-full gradient-primary flex items-center justify-center shrink-0">
+                    <i data-lucide="bot" class="w-4 h-4 text-white"></i>
+                </div>
+                <div class="bg-white p-3 rounded-2xl rounded-tl-none shadow-sm text-sm text-gray-800">
+                    Hi! I'm your Helping Hand assistant. How can I help you today? You can also upload images if you need assistance with medical documents.
+                </div>
+            </div>
+        </div>
+
+        <!-- Image Preview Area -->
+        <div id="image-preview-container" class="hidden px-4 py-2 bg-gray-100 border-t border-gray-200 flex items-center gap-2">
+            <img id="image-preview" src="" alt="Preview" class="h-10 w-10 object-cover rounded shadow-sm border border-gray-300">
+            <span id="image-name" class="text-xs text-gray-500 truncate flex-1"></span>
+            <button id="remove-image" class="text-gray-400 hover:text-red-500">
+                <i data-lucide="x-circle" class="w-4 h-4"></i>
+            </button>
+        </div>
+
+        <!-- Input Area -->
+        <div class="p-3 bg-white border-t border-gray-100">
+            <form id="chatbot-form" class="flex items-center gap-2">
+                {% csrf_token %}
+                <label for="chat-image-upload" class="cursor-pointer text-gray-400 hover:text-teal-600 transition-colors p-2">
+                    <i data-lucide="image" class="w-5 h-5"></i>
+                </label>
+                <input type="file" id="chat-image-upload" accept="image/*" class="hidden">
+                
+                <input type="text" id="chat-input" placeholder="Type your message..." class="flex-1 bg-gray-100 border-none rounded-full px-4 py-2 text-sm focus:ring-2 focus:ring-teal-500 outline-none">
+                
+                <button type="submit" class="w-10 h-10 rounded-full gradient-primary flex items-center justify-center text-white shrink-0 hover:scale-105 transition-transform" id="chat-submit-btn">
+                    <i data-lucide="send" class="w-4 h-4 ml-1"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Add basic animation for the loading dots */
+    .typing-dot {
+        animation: typing 1.4s infinite ease-in-out both;
+    }
+    .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+    .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+    @keyframes typing {
+        0%, 80%, 100% { transform: scale(0); }
+        40% { transform: scale(1); }
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const toggleBtn = document.getElementById('chatbot-toggle');
+    const closeBtn = document.getElementById('chatbot-close');
+    const windowEl = document.getElementById('chatbot-window');
+    const form = document.getElementById('chatbot-form');
+    const input = document.getElementById('chat-input');
+    const messagesEl = document.getElementById('chatbot-messages');
+    
+    const imageUpload = document.getElementById('chat-image-upload');
+    const imagePreviewContainer = document.getElementById('image-preview-container');
+    const imagePreview = document.getElementById('image-preview');
+    const imageName = document.getElementById('image-name');
+    const removeImageBtn = document.getElementById('remove-image');
+    
+    let currentBase64Image = null;
+
+    // Toggle logic
+    toggleBtn.addEventListener('click', () => {
+        windowEl.classList.toggle('hidden');
+        windowEl.classList.toggle('flex');
+        if (!windowEl.classList.contains('hidden')) {
+            input.focus();
+        }
+    });
+
+    closeBtn.addEventListener('click', () => {
+        windowEl.classList.add('hidden');
+        windowEl.classList.remove('flex');
+    });
+
+    // Image upload handling
+    imageUpload.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            // Remove data:image/jpeg;base64, prefix for the backend
+            const fullBase64 = event.target.result;
+            currentBase64Image = fullBase64.split(',')[1];
+            
+            imagePreview.src = fullBase64;
+            imageName.textContent = file.name;
+            imagePreviewContainer.classList.remove('hidden');
+            input.focus();
+        };
+        reader.readAsDataURL(file);
+    });
+
+    removeImageBtn.addEventListener('click', () => {
+        currentBase64Image = null;
+        imageUpload.value = '';
+        imagePreviewContainer.classList.add('hidden');
+    });
+
+    // Send message logic
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const text = input.value.trim();
+        const base64Img = currentBase64Image;
+        const previewSrc = imagePreview.src;
+
+        if (!text && !base64Img) return;
+
+        // Clear input state immediately
+        input.value = '';
+        currentBase64Image = null;
+        imageUpload.value = '';
+        imagePreviewContainer.classList.add('hidden');
+
+        // Render User Message
+        appendUserMessage(text, base64Img ? previewSrc : null);
+        
+        // Show loading
+        const loadingId = appendLoading();
+
+        try {
+            const csrfToken = form.querySelector('[name=csrfmiddlewaretoken]').value;
+
+            const response = await fetch('/api/chatbot/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                body: JSON.stringify({
+                    message: text,
+                    image: base64Img
+                })
+            });
+
+            const data = await response.json();
+            removeLoading(loadingId);
+
+            if (response.ok) {
+                appendBotMessage(data.response);
+            } else {
+                appendBotMessage("Sorry, I encountered an error. Please try again.");
+                console.error("Chatbot API error:", data.error);
+            }
+            
+        } catch (error) {
+            removeLoading(loadingId);
+            appendBotMessage("Network error. Please check your connection.");
+            console.error("Chatbot fetch error:", error);
+        }
+    });
+
+    function appendUserMessage(text, imgSrc) {
+        let contentHtml = '';
+        if (imgSrc) {
+            contentHtml += `<img src="${imgSrc}" class="w-full max-w-[200px] rounded-lg mb-2 object-contain bg-white">`;
+        }
+        if (text) {
+            contentHtml += `<p class="text-sm break-words">${text}</p>`;
+        }
+
+        const msgHtml = `
+            <div class="flex gap-2 justify-end animate-fade-in-up">
+                <div class="bg-teal-600 text-white p-3 rounded-2xl rounded-tr-none shadow-sm max-w-[80%]">
+                    ${contentHtml}
+                </div>
+            </div>
+        `;
+        messagesEl.insertAdjacentHTML('beforeend', msgHtml);
+        scrollToBottom();
+    }
+
+    function appendBotMessage(text) {
+        // Simple markdown parsing for bold text
+        const formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+        
+        const msgHtml = `
+            <div class="flex gap-2 animate-fade-in-up">
+                <div class="w-8 h-8 rounded-full gradient-primary flex items-center justify-center shrink-0 mt-auto">
+                    <i data-lucide="bot" class="w-4 h-4 text-white"></i>
+                </div>
+                <div class="bg-white p-3 rounded-2xl rounded-tl-none shadow-sm text-sm text-gray-800 max-w-[80%]">
+                    ${formattedText}
+                </div>
+            </div>
+        `;
+        messagesEl.insertAdjacentHTML('beforeend', msgHtml);
+        lucide.createIcons();
+        scrollToBottom();
+    }
+
+    function appendLoading() {
+        const id = 'loading-' + Date.now();
+        const msgHtml = `
+            <div id="${id}" class="flex gap-2">
+                <div class="w-8 h-8 rounded-full gradient-primary flex items-center justify-center shrink-0 mt-auto">
+                    <i data-lucide="bot" class="w-4 h-4 text-white"></i>
+                </div>
+                <div class="bg-white p-3 rounded-2xl rounded-tl-none shadow-sm text-sm text-gray-800 flex items-center gap-1">
+                    <div class="w-2 h-2 bg-teal-400 rounded-full typing-dot"></div>
+                    <div class="w-2 h-2 bg-teal-400 rounded-full typing-dot"></div>
+                    <div class="w-2 h-2 bg-teal-400 rounded-full typing-dot"></div>
+                </div>
+            </div>
+        `;
+        messagesEl.insertAdjacentHTML('beforeend', msgHtml);
+        lucide.createIcons();
+        scrollToBottom();
+        return id;
+    }
+
+    function removeLoading(id) {
+        const el = document.getElementById(id);
+        if (el) el.remove();
+    }
+
+    function scrollToBottom() {
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+});
+</script>

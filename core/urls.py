@@ -19,4 +19,7 @@ urlpatterns = [
     path('auth/login/', views.CustomLoginView.as_view(), name='login'),
     path('auth/register/', views.RegisterView.as_view(), name='register'),
     path('auth/logout/', views.CustomLogoutView.as_view(), name='logout'),
+
+    # ── API ────────────────────────────────────────────────────────────────
+    path('api/chatbot/', views.ChatbotAPIView.as_view(), name='chatbot_api'),
 ]
