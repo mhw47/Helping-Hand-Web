@@ -87,6 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const removeImageBtn = document.getElementById('remove-image');
     
     let currentBase64Image = null;
+    let conversationHistory = []; // Tracks {role: 'user'|'assistant', content: '...'}
 
     // Toggle logic
     toggleBtn.addEventListener('click', () => {
@@ -196,7 +197,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({
                     message: text,
                     image: base64Img,
-                    page_context: pageContext
+                    page_context: pageContext,
+                    history: conversationHistory
                 })
             });
 
@@ -286,44 +288,43 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Persist Chat History ---
-    // Save history to sessionStorage whenever it changes
     function saveHistory() {
         sessionStorage.setItem('chatbotHistory', messagesEl.innerHTML);
+        sessionStorage.setItem('chatbotHistoryArray', JSON.stringify(conversationHistory));
     }
 
-    // Load history on start
     function loadHistory() {
-        // Check if page was refreshed (F5). If so, clear the history.
         if (window.performance) {
             const navEntries = performance.getEntriesByType("navigation");
             if (navEntries.length > 0 && navEntries[0].type === "reload") {
                 sessionStorage.removeItem('chatbotHistory');
+                sessionStorage.removeItem('chatbotHistoryArray');
                 return;
             }
         }
 
         const saved = sessionStorage.getItem('chatbotHistory');
-        if (saved) {
+        const savedArr = sessionStorage.getItem('chatbotHistoryArray');
+        if (saved && savedArr) {
             messagesEl.innerHTML = saved;
-            // Also reopen the window if there's history, so it feels continuous
+            conversationHistory = JSON.parse(savedArr);
             windowEl.classList.remove('hidden');
             windowEl.classList.add('flex');
             scrollToBottom();
-            // Re-bind icons since we injected HTML
             lucide.createIcons();
         }
     }
 
-    // We must call saveHistory inside appendUserMessage, appendBotMessage, and appendLoading
-    // Overriding functions slightly to include saveHistory
     const originalAppendUserMsg = appendUserMessage;
     appendUserMessage = function(text, imgSrc) {
+        if (text) conversationHistory.push({ role: 'user', content: text });
         originalAppendUserMsg(text, imgSrc);
         saveHistory();
     }
 
     const originalAppendBotMsg = appendBotMessage;
     appendBotMessage = function(text) {
+        conversationHistory.push({ role: 'assistant', content: text });
         originalAppendBotMsg(text);
         saveHistory();
     }

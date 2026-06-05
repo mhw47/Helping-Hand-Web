@@ -408,11 +408,12 @@ class ChatbotAPIView(View):
             user_message = data.get('message', '')
             base64_image = data.get('image', None)
             page_context = data.get('page_context', None)
+            history = data.get('history', [])
             
             if not user_message and not base64_image:
                 return JsonResponse({'error': 'Message or image is required'}, status=400)
                 
-            ai_response = get_chatbot_response(user_message, base64_image, page_context)
+            ai_response = get_chatbot_response(user_message, base64_image, page_context, history)
             return JsonResponse({'response': ai_response})
             
         except json.JSONDecodeError:
