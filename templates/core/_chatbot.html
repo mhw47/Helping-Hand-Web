@@ -284,5 +284,64 @@ document.addEventListener('DOMContentLoaded', () => {
     function scrollToBottom() {
         messagesEl.scrollTop = messagesEl.scrollHeight;
     }
+
+    // --- Persist Chat History ---
+    // Save history to sessionStorage whenever it changes
+    function saveHistory() {
+        sessionStorage.setItem('chatbotHistory', messagesEl.innerHTML);
+    }
+
+    // Load history on start
+    function loadHistory() {
+        // Check if page was refreshed (F5). If so, clear the history.
+        if (window.performance) {
+            const navEntries = performance.getEntriesByType("navigation");
+            if (navEntries.length > 0 && navEntries[0].type === "reload") {
+                sessionStorage.removeItem('chatbotHistory');
+                return;
+            }
+        }
+
+        const saved = sessionStorage.getItem('chatbotHistory');
+        if (saved) {
+            messagesEl.innerHTML = saved;
+            // Also reopen the window if there's history, so it feels continuous
+            windowEl.classList.remove('hidden');
+            windowEl.classList.add('flex');
+            scrollToBottom();
+            // Re-bind icons since we injected HTML
+            lucide.createIcons();
+        }
+    }
+
+    // We must call saveHistory inside appendUserMessage, appendBotMessage, and appendLoading
+    // Overriding functions slightly to include saveHistory
+    const originalAppendUserMsg = appendUserMessage;
+    appendUserMessage = function(text, imgSrc) {
+        originalAppendUserMsg(text, imgSrc);
+        saveHistory();
+    }
+
+    const originalAppendBotMsg = appendBotMessage;
+    appendBotMessage = function(text) {
+        originalAppendBotMsg(text);
+        saveHistory();
+    }
+
+    const originalAppendLoading = appendLoading;
+    appendLoading = function() {
+        const id = originalAppendLoading();
+        saveHistory();
+        return id;
+    }
+
+    const originalRemoveLoading = removeLoading;
+    removeLoading = function(id) {
+        originalRemoveLoading(id);
+        saveHistory();
+    }
+
+    // Finally, load history when DOM is ready
+    loadHistory();
 });
 </script>
