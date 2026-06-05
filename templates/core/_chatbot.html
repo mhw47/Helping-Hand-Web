@@ -178,6 +178,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             const csrfToken = form.querySelector('[name=csrfmiddlewaretoken]').value;
+            
+            // Scrape the main content of the current page for context
+            let pageContext = '';
+            const mainElement = document.querySelector('main');
+            if (mainElement) {
+                // Get inner text and truncate to ~3000 chars to avoid massive payloads
+                pageContext = mainElement.innerText.substring(0, 3000).trim();
+            }
 
             const response = await fetch('/api/chatbot/', {
                 method: 'POST',
@@ -187,7 +195,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 body: JSON.stringify({
                     message: text,
-                    image: base64Img
+                    image: base64Img,
+                    page_context: pageContext
                 })
             });
 

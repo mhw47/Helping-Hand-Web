@@ -20,7 +20,7 @@ Pricing varies by duration. We offer tiered discounts:
 Booking process: Users can search for staff, select their preferred type of service, and book directly through the platform. Only if the user prompts and clicks on the final 'Book now' button will the booking be confirmed and details appear on the dashboard.
 """
 
-def get_chatbot_response(user_message: str, base64_image: str = None) -> str:
+def get_chatbot_response(user_message: str, base64_image: str = None, page_context: str = None) -> str:
     llm = ChatGoogleGenerativeAI(
         api_key=os.getenv("GOOGLE_API_KEY"),
         model="gemini-2.5-flash",
@@ -31,6 +31,16 @@ def get_chatbot_response(user_message: str, base64_image: str = None) -> str:
         "You are the Customer Support and booking assistant for our company called Helping Hand. "
         "Your purpose is to help the user on the platform by understanding their requirements.\n"
         f"You have the following information about the company:\n{COMPANY_INFO}\n"
+    )
+    
+    if page_context:
+        system_prompt_text += (
+            f"\nAdditionally, the user is currently viewing a webpage with the following scraped text content:\n"
+            f'"""\n{page_context}\n"""\n'
+            "Use this specific page context to assist them accurately regarding the page they are on.\n"
+        )
+        
+    system_prompt_text += (
         "If the user uploaded an image, scan the image, understand it and assist them based on its context. "
         "Your responses should be short, clear and to the point without any technical or medical jargon. "
         "If the user asks about the pricing, discounts, or any other information, do not make up any numbers, "
