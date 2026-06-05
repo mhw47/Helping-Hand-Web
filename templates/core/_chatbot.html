@@ -93,6 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const removeImageBtn = document.getElementById('remove-image');
     
     let currentBase64Image = null;
+    let conversationHistory = []; // Tracks {role: 'user'|'assistant', content: '...'}
 
     // Sanitize text to prevent XSS
     function escapeHtml(str) {
@@ -209,7 +210,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({
                     message: text,
                     image: base64Img,
-                    page_context: pageContext
+                    page_context: pageContext,
+                    history: conversationHistory
                 })
             });
 
@@ -292,6 +294,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Persist Chat History ---
     function saveHistory() {
         sessionStorage.setItem('chatbotHistory', messagesEl.innerHTML);
+        sessionStorage.setItem('chatbotHistoryArray', JSON.stringify(conversationHistory));
     }
 
     function loadHistory() {
@@ -299,12 +302,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const navEntries = performance.getEntriesByType("navigation");
             if (navEntries.length > 0 && navEntries[0].type === "reload") {
                 sessionStorage.removeItem('chatbotHistory');
+                sessionStorage.removeItem('chatbotHistoryArray');
                 return;
             }
         }
 
         const saved = sessionStorage.getItem('chatbotHistory');
-        if (saved) {
+        const savedArr = sessionStorage.getItem('chatbotHistoryArray');
+        if (saved && savedArr) {
             messagesEl.innerHTML = saved;
             windowEl.classList.remove('hidden');
             windowEl.classList.add('flex');
@@ -315,12 +320,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const originalAppendUserMsg = appendUserMessage;
     appendUserMessage = function(text, imgSrc) {
+        if (text) conversationHistory.push({ role: 'user', content: text });
         originalAppendUserMsg(text, imgSrc);
         saveHistory();
     }
 
     const originalAppendBotMsg = appendBotMessage;
     appendBotMessage = function(text) {
+        conversationHistory.push({ role: 'assistant', content: text });
         originalAppendBotMsg(text);
         saveHistory();
     }

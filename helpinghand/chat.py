@@ -1,6 +1,6 @@
 import os
 from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_core.messages import HumanMessage, SystemMessage
+from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -18,9 +18,10 @@ Pricing varies by duration. We offer tiered discounts:
 - Monthly: 20% discount
 
 Booking process: Users can search for staff, select their preferred type of service, and book directly through the platform. Only if the user prompts and clicks on the final 'Book now' button will the booking be confirmed and details appear on the dashboard.
+Helping hand is a service based company, they do not provide equipment or products. So if the user asks about equipment or products, politely inform them that they do not provide it.
 """
 
-def get_chatbot_response(user_message: str, base64_image: str = None, page_context: str = None) -> str:
+def get_chatbot_response(user_message: str, base64_image: str = None, page_context: str = None, history: list = None) -> str:
     llm = ChatGoogleGenerativeAI(
         api_key=os.getenv("GOOGLE_API_KEY"),
         model="gemini-2.5-flash",
@@ -41,6 +42,7 @@ def get_chatbot_response(user_message: str, base64_image: str = None, page_conte
         )
         
     system_prompt_text += (
+        "If the user wants to book a service, actively use the scraped webpage context (which contains service names, descriptions, and pricing) to guide them step-by-step on how to book it. "
         "If the user uploaded an image, scan the image, understand it and assist them based on its context. "
         "Your responses should be short, clear and to the point without any technical or medical jargon. "
         "If the user asks about the pricing, discounts, or any other information, do not make up any numbers, "
@@ -48,6 +50,14 @@ def get_chatbot_response(user_message: str, base64_image: str = None, page_conte
     )
 
     messages = [SystemMessage(content=system_prompt_text)]
+    
+    # Inject conversational history
+    if history:
+        for msg in history:
+            if msg.get('role') == 'user':
+                messages.append(HumanMessage(content=msg.get('content', '')))
+            elif msg.get('role') == 'assistant':
+                messages.append(AIMessage(content=msg.get('content', '')))
 
     content = [{"type": "text", "text": user_message}]
     if base64_image:
