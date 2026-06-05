@@ -20,3 +20,6 @@ whitenoise>=6.6.0
 
 # Database URL parsing (Supabase / Vercel integration)
 dj-database-url>=2.1.0
+
+# Chatbot AI
+langchain-google-genai>=1.0.0
