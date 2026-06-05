@@ -1,57 +1,63 @@
 <!-- Floating Chatbot Widget -->
 <div id="chatbot-widget" class="fixed bottom-6 right-6 z-50">
     <!-- Chatbot Toggle Button -->
-    <button id="chatbot-toggle" class="w-14 h-14 rounded-full gradient-primary shadow-lg flex items-center justify-center text-white hover:scale-105 transition-transform">
-        <i data-lucide="message-square" class="w-6 h-6"></i>
+    <button id="chatbot-toggle" class="w-14 h-14 rounded-full bg-[#7DB7FF] shadow-[0_8px_25px_rgba(125,183,255,0.3)] flex items-center justify-center text-[#081120] hover:scale-105 hover:shadow-[0_8px_30px_rgba(125,183,255,0.4)] transition-all duration-300 cursor-pointer">
+        <i data-lucide="message-square" class="w-6 h-6 animate-float"></i>
     </button>
 
     <!-- Chatbot Window -->
-    <div id="chatbot-window" class="hidden absolute bottom-16 right-0 w-80 sm:w-96 bg-white rounded-2xl shadow-2xl border border-gray-100 flex-col overflow-hidden" style="height: 500px; max-height: 80vh;">
+    <div id="chatbot-window" class="hidden absolute bottom-16 right-0 w-80 sm:w-96 bg-gradient-to-b from-[#07182E]/95 to-[#081120]/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl flex-col overflow-hidden" style="height: 500px; max-height: 80vh;">
         <!-- Header -->
-        <div class="gradient-primary p-4 text-white flex justify-between items-center">
-            <div class="flex items-center gap-2">
-                <i data-lucide="bot" class="w-5 h-5"></i>
-                <h3 class="font-bold">Support Assistant</h3>
+        <div class="bg-[#0D1B2A]/95 border-b border-white/10 p-4 text-white flex justify-between items-center">
+            <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center border border-white/20 relative">
+                    <i data-lucide="bot" class="w-4 h-4 text-white"></i>
+                    <span class="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-[#7DB7FF] border border-[#0D1B2A] animate-pulse"></span>
+                </div>
+                <div>
+                    <h3 class="font-bold text-sm tracking-tight" style="font-family: var(--font-heading);">Care Assistant</h3>
+                    <p class="text-[9px] text-white/80 uppercase font-bold tracking-wider">Online</p>
+                </div>
             </div>
-            <button id="chatbot-close" class="text-white hover:text-gray-200">
-                <i data-lucide="x" class="w-5 h-5"></i>
+            <button id="chatbot-close" class="w-8 h-8 rounded-lg flex items-center justify-center bg-white/10 border border-white/5 hover:bg-white/20 text-white/90 hover:text-white transition-colors cursor-pointer">
+                <i data-lucide="x" class="w-4 h-4"></i>
             </button>
         </div>
 
         <!-- Messages Area -->
-        <div id="chatbot-messages" class="flex-1 p-4 overflow-y-auto bg-gray-50 flex flex-col gap-3">
-            <div class="flex gap-2">
-                <div class="w-8 h-8 rounded-full gradient-primary flex items-center justify-center shrink-0">
-                    <i data-lucide="bot" class="w-4 h-4 text-white"></i>
+        <div id="chatbot-messages" class="flex-1 p-4 overflow-y-auto bg-transparent flex flex-col gap-4">
+            <div class="flex gap-3 animate-fade-in-up">
+                <div class="w-8 h-8 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 mt-auto shadow-sm">
+                    <i data-lucide="bot" class="w-4 h-4 text-[#7DB7FF]"></i>
                 </div>
-                <div class="bg-white p-3 rounded-2xl rounded-tl-none shadow-sm text-sm text-gray-800">
+                <div class="bg-[#0D1B2A] border border-white/5 p-3.5 rounded-2xl rounded-tl-none shadow-sm text-sm text-[#C7D0D9] max-w-[80%] leading-relaxed">
                     Hi! I'm your Helping Hand assistant. How can I help you today? You can also upload images if you need assistance with medical documents.
                 </div>
             </div>
         </div>
 
         <!-- Image Preview Area -->
-        <div id="image-preview-container" class="hidden px-4 py-2 bg-gray-100 border-t border-gray-200 flex items-center gap-2">
-            <img id="image-preview" src="" alt="Preview" class="h-10 w-10 object-cover rounded shadow-sm border border-gray-300">
-            <span id="image-name" class="text-xs text-gray-500 truncate flex-1"></span>
-            <button id="remove-image" class="text-gray-400 hover:text-red-500">
-                <i data-lucide="x-circle" class="w-4 h-4"></i>
+        <div id="image-preview-container" class="hidden px-4 py-3 bg-[#07182E]/50 border-t border-white/10 flex items-center gap-3">
+            <img id="image-preview" src="" alt="Preview" class="h-10 w-10 object-cover rounded-lg shadow-md border border-white/10">
+            <span id="image-name" class="text-xs text-slate-400 truncate flex-1 font-medium"></span>
+            <button id="remove-image" class="text-slate-400 hover:text-red-400 transition-colors cursor-pointer">
+                <i data-lucide="x-circle" class="w-4.5 h-4.5"></i>
             </button>
         </div>
 
         <!-- Input Area -->
-        <div class="p-3 bg-white border-t border-gray-100">
+        <div class="p-3 bg-[#0D1B2A]/90 border-t border-white/10">
             <form id="chatbot-form" class="flex items-center gap-2">
                 {% csrf_token %}
-                <label for="chat-image-upload" class="cursor-pointer text-gray-400 hover:text-teal-600 transition-colors p-2">
+                <label for="chat-image-upload" class="cursor-pointer text-slate-400 hover:text-[#7DB7FF] transition-colors p-2.5 hover:bg-white/5 rounded-xl">
                     <i data-lucide="image" class="w-5 h-5"></i>
                 </label>
                 <input type="file" id="chat-image-upload" accept="image/*" class="hidden">
                 
-                <input type="text" id="chat-input" placeholder="Type your message..." class="flex-1 bg-gray-100 border-none rounded-full px-4 py-2 text-sm focus:ring-2 focus:ring-teal-500 outline-none">
+                <input type="text" id="chat-input" placeholder="Type your message..." class="flex-1 bg-[#081120] border border-white/10 rounded-full px-4 py-2.5 text-sm text-white focus:ring-1 focus:ring-[#7DB7FF] focus:border-[#7DB7FF] outline-none transition-all placeholder-slate-500">
                 
-                <button type="submit" class="w-10 h-10 rounded-full gradient-primary flex items-center justify-center text-white shrink-0 hover:scale-105 transition-transform" id="chat-submit-btn">
-                    <i data-lucide="send" class="w-4 h-4 ml-1"></i>
+                <button type="submit" class="w-10 h-10 rounded-full bg-[#7DB7FF] flex items-center justify-center text-[#081120] shrink-0 hover:scale-105 transition-transform duration-200 cursor-pointer shadow-md" id="chat-submit-btn">
+                    <i data-lucide="send" class="w-4 h-4 ml-0.5"></i>
                 </button>
             </form>
         </div>
@@ -87,6 +93,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const removeImageBtn = document.getElementById('remove-image');
     
     let currentBase64Image = null;
+
+    // Sanitize text to prevent XSS
+    function escapeHtml(str) {
+        const div = document.createElement('div');
+        div.appendChild(document.createTextNode(str));
+        return div.innerHTML;
+    }
 
     // Toggle logic
     toggleBtn.addEventListener('click', () => {
@@ -125,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     if (height > MAX_HEIGHT) {
                         width *= MAX_HEIGHT / height;
-                        height = MAX_HEIGHT;
+                        width = MAX_HEIGHT;
                     }
                 }
 
@@ -220,15 +233,15 @@ document.addEventListener('DOMContentLoaded', () => {
     function appendUserMessage(text, imgSrc) {
         let contentHtml = '';
         if (imgSrc) {
-            contentHtml += `<img src="${imgSrc}" class="w-full max-w-[200px] rounded-lg mb-2 object-contain bg-white">`;
+            contentHtml += `<img src="${imgSrc}" class="w-full max-w-[200px] rounded-lg mb-2 object-contain bg-white/5 border border-white/10">`;
         }
         if (text) {
-            contentHtml += `<p class="text-sm break-words">${text}</p>`;
+            contentHtml += `<p class="text-sm break-words">${escapeHtml(text)}</p>`;
         }
 
         const msgHtml = `
             <div class="flex gap-2 justify-end animate-fade-in-up">
-                <div class="bg-teal-600 text-white p-3 rounded-2xl rounded-tr-none shadow-sm max-w-[80%]">
+                <div class="bg-[#07182E] border border-[#7DB7FF]/15 text-white p-3.5 rounded-2xl rounded-tr-none shadow-md max-w-[80%] leading-relaxed">
                     ${contentHtml}
                 </div>
             </div>
@@ -242,11 +255,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
         
         const msgHtml = `
-            <div class="flex gap-2 animate-fade-in-up">
-                <div class="w-8 h-8 rounded-full gradient-primary flex items-center justify-center shrink-0 mt-auto">
-                    <i data-lucide="bot" class="w-4 h-4 text-white"></i>
+            <div class="flex gap-3 animate-fade-in-up">
+                <div class="w-8 h-8 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 mt-auto shadow-sm">
+                    <i data-lucide="bot" class="w-4 h-4 text-[#7DB7FF]"></i>
                 </div>
-                <div class="bg-white p-3 rounded-2xl rounded-tl-none shadow-sm text-sm text-gray-800 max-w-[80%]">
+                <div class="bg-[#0D1B2A] border border-white/5 p-3.5 rounded-2xl rounded-tl-none shadow-sm text-sm text-[#C7D0D9] max-w-[80%] leading-relaxed">
                     ${formattedText}
                 </div>
             </div>
@@ -259,14 +272,14 @@ document.addEventListener('DOMContentLoaded', () => {
     function appendLoading() {
         const id = 'loading-' + Date.now();
         const msgHtml = `
-            <div id="${id}" class="flex gap-2">
-                <div class="w-8 h-8 rounded-full gradient-primary flex items-center justify-center shrink-0 mt-auto">
-                    <i data-lucide="bot" class="w-4 h-4 text-white"></i>
+            <div id="${id}" class="flex gap-3">
+                <div class="w-8 h-8 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 mt-auto shadow-sm">
+                    <i data-lucide="bot" class="w-4 h-4 text-[#7DB7FF]"></i>
                 </div>
-                <div class="bg-white p-3 rounded-2xl rounded-tl-none shadow-sm text-sm text-gray-800 flex items-center gap-1">
-                    <div class="w-2 h-2 bg-teal-400 rounded-full typing-dot"></div>
-                    <div class="w-2 h-2 bg-teal-400 rounded-full typing-dot"></div>
-                    <div class="w-2 h-2 bg-teal-400 rounded-full typing-dot"></div>
+                <div class="bg-[#0D1B2A] border border-white/5 p-3 rounded-2xl rounded-tl-none shadow-sm text-sm text-[#C7D0D9] flex items-center gap-1.5">
+                    <div class="w-2 h-2 bg-[#7DB7FF] rounded-full typing-dot"></div>
+                    <div class="w-2 h-2 bg-[#7DB7FF] rounded-full typing-dot"></div>
+                    <div class="w-2 h-2 bg-[#7DB7FF] rounded-full typing-dot"></div>
                 </div>
             </div>
         `;
@@ -276,24 +289,12 @@ document.addEventListener('DOMContentLoaded', () => {
         return id;
     }
 
-    function removeLoading(id) {
-        const el = document.getElementById(id);
-        if (el) el.remove();
-    }
-
-    function scrollToBottom() {
-        messagesEl.scrollTop = messagesEl.scrollHeight;
-    }
-
     // --- Persist Chat History ---
-    // Save history to sessionStorage whenever it changes
     function saveHistory() {
         sessionStorage.setItem('chatbotHistory', messagesEl.innerHTML);
     }
 
-    // Load history on start
     function loadHistory() {
-        // Check if page was refreshed (F5). If so, clear the history.
         if (window.performance) {
             const navEntries = performance.getEntriesByType("navigation");
             if (navEntries.length > 0 && navEntries[0].type === "reload") {
@@ -305,17 +306,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const saved = sessionStorage.getItem('chatbotHistory');
         if (saved) {
             messagesEl.innerHTML = saved;
-            // Also reopen the window if there's history, so it feels continuous
             windowEl.classList.remove('hidden');
             windowEl.classList.add('flex');
             scrollToBottom();
-            // Re-bind icons since we injected HTML
             lucide.createIcons();
         }
     }
 
-    // We must call saveHistory inside appendUserMessage, appendBotMessage, and appendLoading
-    // Overriding functions slightly to include saveHistory
     const originalAppendUserMsg = appendUserMessage;
     appendUserMessage = function(text, imgSrc) {
         originalAppendUserMsg(text, imgSrc);
@@ -335,13 +332,16 @@ document.addEventListener('DOMContentLoaded', () => {
         return id;
     }
 
-    const originalRemoveLoading = removeLoading;
-    removeLoading = function(id) {
-        originalRemoveLoading(id);
+    window.removeLoading = function(id) {
+        const el = document.getElementById(id);
+        if (el) el.remove();
         saveHistory();
+    };
+
+    function scrollToBottom() {
+        messagesEl.scrollTop = messagesEl.scrollHeight;
     }
 
-    // Finally, load history when DOM is ready
     loadHistory();
 });
 </script>

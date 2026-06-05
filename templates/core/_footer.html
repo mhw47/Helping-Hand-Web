@@ -1,80 +1,71 @@
 {% load static %}
 <!-- ═══════════════ FOOTER ═══════════════ -->
-<footer style="background: var(--color-surface-100); border-top: 1px solid var(--color-surface-300);" class="pt-16 pb-8">
+<footer class="bg-secondary-bg border-t border-white/5 pt-16 pb-8 text-softGray">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
 
       <!-- Brand -->
-      <div class="lg:col-span-1">
-        <div class="flex items-center gap-2 mb-4">
-          <div class="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center">
+      <div class="lg:col-span-1 space-y-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-maroon to-terracotta flex items-center justify-center shadow-[0_4px_15px_rgba(139,92,246,0.2)]">
             <i data-lucide="heart" class="w-5 h-5 text-white" fill="white"></i>
           </div>
-          <span class="text-xl font-bold" style="font-family: var(--font-heading); color: var(--color-surface-900);">
+          <span class="text-xl font-bold tracking-tight text-white" style="font-family: var(--font-heading);">
             Helping Hand
           </span>
         </div>
-        <p class="text-sm leading-relaxed" style="color: var(--color-surface-500);">
-          Professional home healthcare services delivered with compassion and trust.
+        <p class="text-sm leading-relaxed text-slate-400">
+          Professional home healthcare services delivered with compassion, safety, and elite care standards.
         </p>
       </div>
 
       <!-- Quick Links -->
-      <div>
-        <h4 class="text-sm font-semibold uppercase tracking-wider mb-4" style="color: var(--color-surface-500);">
+      <div class="space-y-4">
+        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500">
           Quick Links
         </h4>
-        <ul class="space-y-2.5">
-          <li><a href="{% url 'landing' %}" class="text-sm transition-colors" style="color: var(--color-surface-600);" onmouseover="this.style.color='var(--color-primary-400)'" onmouseout="this.style.color='var(--color-surface-600)'">Home</a></li>
-          <li><a href="{% url 'services' %}" class="text-sm transition-colors" style="color: var(--color-surface-600);" onmouseover="this.style.color='var(--color-primary-400)'" onmouseout="this.style.color='var(--color-surface-600)'">Services</a></li>
-          <li><a href="{% url 'landing' %}" class="text-sm transition-colors" style="color: var(--color-surface-600);" onmouseover="this.style.color='var(--color-primary-400)'" onmouseout="this.style.color='var(--color-surface-600)'">Book Now</a></li>
-          <li><a href="{% url 'support' %}" class="text-sm transition-colors" style="color: var(--color-surface-600);" onmouseover="this.style.color='var(--color-primary-400)'" onmouseout="this.style.color='var(--color-surface-600)'">Support</a></li>
+        <ul class="space-y-3">
+          <li><a href="{% url 'landing' %}" class="text-sm hover:text-blueGlow transition-colors">Home</a></li>
+          <li><a href="{% url 'services' %}" class="text-sm hover:text-blueGlow transition-colors">Services</a></li>
+          <li><a href="{% url 'services' %}" class="text-sm hover:text-blueGlow transition-colors">Book Now</a></li>
+          <li><a href="{% url 'support' %}" class="text-sm hover:text-blueGlow transition-colors">Support</a></li>
         </ul>
       </div>
 
       <!-- Contact -->
-      <div>
-        <h4 class="text-sm font-semibold uppercase tracking-wider mb-4" style="color: var(--color-surface-500);">
+      <div class="space-y-4">
+        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500">
           Contact Us
         </h4>
-        <ul class="space-y-3">
-          <li class="flex items-start gap-2.5 text-sm" style="color: var(--color-surface-600);">
-            <i data-lucide="map-pin" class="w-4 h-4 mt-0.5 shrink-0" style="color: var(--color-primary-400);"></i>
-            Mumbai, Maharashtra, India
+        <ul class="space-y-3.5">
+          <li class="flex items-start gap-3 text-sm">
+            <i data-lucide="map-pin" class="w-4 h-4 mt-0.5 shrink-0 text-terracotta"></i>
+            <span>Mumbai, Maharashtra, India</span>
           </li>
-          <li class="flex items-center gap-2.5 text-sm" style="color: var(--color-surface-600);">
-            <i data-lucide="phone" class="w-4 h-4 shrink-0" style="color: var(--color-primary-400);"></i>
-            +91 98765 43210
+          <li class="flex items-center gap-3 text-sm">
+            <i data-lucide="phone" class="w-4 h-4 shrink-0 text-terracotta"></i>
+            <span class="hover:text-blueGlow transition-colors">+91 98765 43210</span>
           </li>
-          <li class="flex items-center gap-2.5 text-sm" style="color: var(--color-surface-600);">
-            <i data-lucide="mail" class="w-4 h-4 shrink-0" style="color: var(--color-primary-400);"></i>
-            care@helpinghand.in
+          <li class="flex items-center gap-3 text-sm">
+            <i data-lucide="mail" class="w-4 h-4 shrink-0 text-terracotta"></i>
+            <span class="hover:text-blueGlow transition-colors">care@helpinghand.in</span>
           </li>
         </ul>
       </div>
 
       <!-- Social -->
-      <div>
-        <h4 class="text-sm font-semibold uppercase tracking-wider mb-4" style="color: var(--color-surface-500);">
+      <div class="space-y-4">
+        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500">
           Follow Us
         </h4>
         <div class="flex gap-3">
-          <a href="#" class="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 hover:scale-110"
-             style="background: var(--color-surface-300); color: var(--color-surface-600);"
-             onmouseover="this.style.background='var(--color-primary-600)'; this.style.color='white';"
-             onmouseout="this.style.background='var(--color-surface-300)'; this.style.color='var(--color-surface-600)';">
+          <a href="#" class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-softGray hover:text-white hover:bg-terracotta hover:border-terracotta hover:shadow-[0_4px_15px_rgba(139,92,246,0.4)] transition-all duration-300 hover:-translate-y-1">
             <i data-lucide="globe" class="w-4 h-4"></i>
           </a>
-          <a href="#" class="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 hover:scale-110"
-             style="background: var(--color-surface-300); color: var(--color-surface-600);"
-             onmouseover="this.style.background='var(--color-primary-600)'; this.style.color='white';"
-             onmouseout="this.style.background='var(--color-surface-300)'; this.style.color='var(--color-surface-600)';">
+          <a href="#" class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-softGray hover:text-white hover:bg-terracotta hover:border-terracotta hover:shadow-[0_4px_15px_rgba(139,92,246,0.4)] transition-all duration-300 hover:-translate-y-1">
             <i data-lucide="camera" class="w-4 h-4"></i>
           </a>
-          <a href="#" class="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 hover:scale-110"
-             style="background: var(--color-surface-300); color: var(--color-surface-600);"
-             onmouseover="this.style.background='var(--color-primary-600)'; this.style.color='white';"
-             onmouseout="this.style.background='var(--color-surface-300)'; this.style.color='var(--color-surface-600)';">
+          <a href="#" class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-softGray hover:text-white hover:bg-terracotta hover:border-terracotta hover:shadow-[0_4px_15px_rgba(139,92,246,0.4)] transition-all duration-300 hover:-translate-y-1">
             <i data-lucide="message-circle" class="w-4 h-4"></i>
           </a>
         </div>
@@ -82,11 +73,11 @@
     </div>
 
     <!-- Bottom -->
-    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8" style="border-top: 1px solid var(--color-surface-300);">
-      <p class="text-sm" style="color: var(--color-surface-500);">© 2026 Helping Hand. All rights reserved.</p>
-      <div class="flex gap-6 text-sm">
-        <a href="#" class="transition-colors" style="color: var(--color-surface-500);" onmouseover="this.style.color='var(--color-primary-400)'" onmouseout="this.style.color='var(--color-surface-500)'">Privacy Policy</a>
-        <a href="#" class="transition-colors" style="color: var(--color-surface-500);" onmouseover="this.style.color='var(--color-primary-400)'" onmouseout="this.style.color='var(--color-surface-500)'">Terms of Service</a>
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-white/5 text-slate-500 text-xs">
+      <p>© 2026 Helping Hand. All rights reserved.</p>
+      <div class="flex gap-6">
+        <a href="#" class="hover:text-blueGlow transition-colors">Privacy Policy</a>
+        <a href="#" class="hover:text-blueGlow transition-colors">Terms of Service</a>
       </div>
     </div>
   </div>
