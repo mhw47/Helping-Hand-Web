@@ -23,21 +23,7 @@
         <p class="text-xs sm:text-sm text-slate-400 font-medium mt-1">Join Helping Hand to request or manage caretaker services</p>
       </div>
 
-      <!-- Role Selector Tabs -->
-      <div class="flex gap-2 mb-6 p-1.5 rounded-xl bg-white/5 border border-white/10">
-        <a href="{% url 'register' %}?role=patient"
-           class="flex-1 py-2.5 text-center text-xs sm:text-sm font-bold rounded-lg transition-all duration-300
-                  {% if role == 'patient' %}bg-gradient-to-r from-maroon to-terracotta text-white shadow-sm{% else %}text-slate-400 hover:text-white hover:bg-white/5{% endif %}"
-           id="role-patient-tab">
-          Patient
-        </a>
-        <a href="{% url 'register' %}?role=agency"
-           class="flex-1 py-2.5 text-center text-xs sm:text-sm font-bold rounded-lg transition-all duration-300
-                  {% if role == 'agency' %}bg-gradient-to-r from-maroon to-terracotta text-white shadow-sm{% else %}text-slate-400 hover:text-white hover:bg-white/5{% endif %}"
-           id="role-agency-tab">
-          Agency Manager
-        </a>
-      </div>
+
 
       <!-- Error Messages -->
       {% if form.non_field_errors %}
@@ -52,8 +38,7 @@
       </div>
       {% endif %}
 
-      <!-- Registration Form -->
-      <form method="post" action="{% url 'register' %}?role={{ role }}" id="register-form" class="space-y-4">
+      <form method="post" action="{% url 'register' %}" id="register-form" class="space-y-4">
         {% csrf_token %}
 
         <!-- Name Row -->
@@ -104,8 +89,7 @@
           {% endif %}
         </div>
 
-        <!-- Email (Patient only) -->
-        {% if role == 'patient' %}
+        <!-- Email -->
         <div>
           <label for="id_email" class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
             Email <span class="text-slate-500 font-normal lowercase">(optional)</span>
@@ -118,7 +102,7 @@
           </p>
           {% endif %}
         </div>
-        {% endif %}
+
 
         <!-- Password -->
         <div>

@@ -111,12 +111,6 @@ class PatientRegistrationForm(BaseRegistrationForm):
                   'password1', 'password2']
 
 
-class AgencyRegistrationForm(BaseRegistrationForm):
-    """Registration form for Agency Manager accounts."""
-
-    ROLE = User.Role.AGENCY
-
-
 class HelpingHandLoginForm(AuthenticationForm):
     """
     Styled login form using Django's built-in AuthenticationForm.

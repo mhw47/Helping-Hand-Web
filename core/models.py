@@ -61,7 +61,6 @@ class User(AbstractUser):
 
     class Role(models.TextChoices):
         PATIENT = 'patient', 'Patient'
-        AGENCY = 'agency', 'Agency Manager'
 
     role = models.CharField(
         max_length=10,
@@ -125,9 +124,7 @@ class User(AbstractUser):
     def is_patient(self):
         return self.role == self.Role.PATIENT
 
-    @property
-    def is_agency(self):
-        return self.role == self.Role.AGENCY
+
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -190,14 +187,7 @@ class StaffProfile(models.Model):
         help_text='Whether the staff member is available for new bookings.',
     )
 
-    # Ownership
-    agency = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name='staff_profiles',
-        limit_choices_to={'role': User.Role.AGENCY},
-        help_text='The agency that manages this staff member.',
-    )
+
 
     # Timestamps
     created_at = models.DateTimeField(auto_now_add=True)

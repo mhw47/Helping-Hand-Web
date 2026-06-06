@@ -15,7 +15,8 @@ urlpatterns = [
     # ── Services / Booking ───────────────────────────────────────────────────
     path('book/<str:service_type>/', views.BookingCreateView.as_view(), name='book_service'),
 
-    # ── Authentication ─────────────────────────────────────────────────────
+    # ── Authentication & Dashboard ──────────────────────────────────────────
+    path('dashboard/', views.DashboardView.as_view(), name='dashboard'),
     path('auth/login/', views.CustomLoginView.as_view(), name='login'),
     path('auth/register/', views.RegisterView.as_view(), name='register'),
     path('auth/logout/', views.CustomLogoutView.as_view(), name='logout'),

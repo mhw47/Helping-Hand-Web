@@ -21,7 +21,6 @@ from django.views.decorators.csrf import csrf_exempt
 
 from .forms import (
     PatientRegistrationForm,
-    AgencyRegistrationForm,
     HelpingHandLoginForm,
     BookingForm,
 )
@@ -271,30 +270,16 @@ class SupportView(TemplateView):
 
 class RegisterView(FormView):
     """
-    User registration view with role-based form selection.
-
-    GET /auth/register/?role=patient   → PatientRegistrationForm
-    GET /auth/register/?role=agency    → AgencyRegistrationForm
+    User registration view.
     """
 
     template_name = 'auth/register.html'
     success_url = reverse_lazy('landing')
-
-    def get_role(self):
-        """Get the selected role from query params, default to 'patient'."""
-        role = self.request.GET.get('role', 'patient')
-        if role not in ('patient', 'agency'):
-            role = 'patient'
-        return role
-
-    def get_form_class(self):
-        if self.get_role() == 'agency':
-            return AgencyRegistrationForm
-        return PatientRegistrationForm
+    form_class = PatientRegistrationForm
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        ctx['role'] = self.get_role()
+        ctx['role'] = 'patient'
         return ctx
 
     def form_valid(self, form):
@@ -345,6 +330,19 @@ class CustomLogoutView(LogoutView):
     def dispatch(self, request, *args, **kwargs):
         messages.info(request, 'You have been logged out successfully.')
         return super().dispatch(request, *args, **kwargs)
+
+class DashboardView(LoginRequiredMixin, TemplateView):
+    """
+    Patient dashboard view showing active and past bookings.
+    """
+    template_name = 'core/dashboard_patient.html'
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        all_bookings = Booking.objects.filter(patient=self.request.user).order_by('-created_at')
+        ctx['active_bookings'] = all_bookings.exclude(status__in=['completed', 'cancelled'])
+        ctx['past_bookings'] = all_bookings.filter(status__in=['completed', 'cancelled'])
+        return ctx
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
