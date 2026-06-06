@@ -4,7 +4,7 @@
 {% block title %}My Dashboard{% endblock %}
 
 {% block content %}
-<div class="pt-28 pb-12 bg-surface-50 min-h-screen">
+<div class="pt-28 pb-12 bg-transparent min-h-screen">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     
     <!-- ═══════════════ HEADER ═══════════════ -->
@@ -12,9 +12,9 @@
       <div>
         <div class="flex items-center gap-3">
           <div class="chakra-loader" style="width: 28px; height: 28px; border-width: 2px;"></div>
-          <h1 class="text-3xl font-extrabold text-navy-500">Patient Dashboard</h1>
+          <h1 class="text-3xl font-extrabold text-white">Patient Dashboard</h1>
         </div>
-        <p class="text-surface-500 mt-1">Manage your home care requests, active services, and reviews.</p>
+        <p class="text-slate-400 mt-1">Manage your home care requests, active services, and reviews.</p>
       </div>
       <div>
         <a href="{% url 'services' %}" class="btn-primary flex items-center gap-2">
@@ -31,22 +31,22 @@
       <div class="lg:col-span-2 space-y-8">
         
         <!-- SECTION: Active Bookings -->
-        <div class="bg-white rounded-2xl border border-surface-200 shadow-sm p-6 relative overflow-hidden">
-          <div class="absolute top-0 left-0 right-0 h-1 bg-saffron-500"></div>
-          <h2 class="text-xl font-bold text-navy-900 mb-6 flex items-center gap-2">
-            <i data-lucide="activity" class="text-saffron-500 w-5 h-5"></i>
+        <div class="card p-6 relative overflow-hidden">
+          <div class="absolute top-0 left-0 right-0 h-1 bg-blueGlow"></div>
+          <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+            <i data-lucide="activity" class="text-blueGlow w-5 h-5"></i>
             Active Care Services
           </h2>
 
           <div class="space-y-4">
             {% for booking in active_bookings %}
-            <div class="p-5 rounded-xl bg-surface-50 border border-surface-200 transition-all hover:shadow-md">
+            <div class="p-5 rounded-xl bg-white/5 border border-white/10 transition-all hover:shadow-md">
               <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
                 <div class="flex items-center gap-3">
-                  <span class="text-sm font-extrabold text-navy-600 bg-navy-50 border border-navy-100 px-3 py-1 rounded-lg">
+                  <span class="text-sm font-extrabold text-white bg-blueGlow/10 border border-blueGlow/20 px-3 py-1 rounded-lg">
                     {{ booking.booking_id }}
                   </span>
-                  <span class="text-sm font-bold text-navy-900">
+                  <span class="text-sm font-bold text-white">
                     {{ booking.get_service_type_display }}
                   </span>
                 </div>
@@ -64,35 +64,35 @@
               </div>
 
               <!-- Details Grid -->
-              <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-xs text-surface-600 mb-4">
+              <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-xs text-slate-400 mb-4">
                 <div>
-                  <strong class="text-navy-900 block mb-0.5">Patient Details:</strong>
+                  <strong class="text-white block mb-0.5">Patient Details:</strong>
                   {{ booking.patient_name }} ({{ booking.get_patient_gender_display }}, {{ booking.patient_age }} yrs)
                 </div>
                 <div>
-                  <strong class="text-navy-900 block mb-0.5">Duration & Schedule:</strong>
+                  <strong class="text-white block mb-0.5">Duration & Schedule:</strong>
                   {{ booking.start_date }} ({{ booking.duration_days }} day{{ booking.duration_days|pluralize }})
                 </div>
                 <div>
-                  <strong class="text-navy-900 block mb-0.5">Assigned Staff:</strong>
+                  <strong class="text-white block mb-0.5">Assigned Staff:</strong>
                   {% if booking.staff %}
-                    <div class="flex items-center gap-1.5 font-semibold text-navy-800">
-                      <i data-lucide="user-check" class="w-3.5 h-3.5 text-flaggreen-600"></i>
+                    <div class="flex items-center gap-1.5 font-semibold text-slate-200">
+                      <i data-lucide="user-check" class="w-3.5 h-3.5 text-terracotta"></i>
                       {{ booking.staff.name }} ({{ booking.staff.rating }}★)
                     </div>
                   {% else %}
-                    <span class="text-surface-500 italic">Matching in progress...</span>
+                    <span class="text-slate-400 italic">Matching in progress...</span>
                   {% endif %}
                 </div>
               </div>
 
               <!-- Price & Action -->
-              <div class="flex items-center justify-between pt-4 border-t border-surface-200/80">
+              <div class="flex items-center justify-between pt-4 border-t border-white/10/80">
                 <div class="text-sm">
-                  <span class="text-surface-500">Total Cost:</span>
-                  <span class="font-bold text-navy-900 text-base">₹{{ booking.total_cost|floatformat:0 }}</span>
+                  <span class="text-slate-400">Total Cost:</span>
+                  <span class="font-bold text-white text-base">₹{{ booking.total_cost|floatformat:0 }}</span>
                   {% if booking.discount_percentage > 0 %}
-                    <span class="text-xs text-flaggreen-600 bg-flaggreen-50 border border-flaggreen-100 py-0.5 px-2 rounded-full font-bold ml-1">
+                    <span class="text-xs text-terracotta bg-terracotta/10 border border-terracotta/20 py-0.5 px-2 rounded-full font-bold ml-1">
                       -{{ booking.discount_percentage|stringformat:".0%" }}
                     </span>
                   {% endif %}
@@ -103,7 +103,7 @@
                   {% csrf_token %}
                   <input type="hidden" name="booking_id" value="{{ booking.booking_id }}">
                   <input type="hidden" name="action" value="cancel">
-                  <button type="submit" class="btn-ghost text-xs text-red-500 hover:bg-red-50 border border-red-200/60 font-semibold py-1.5 px-3 rounded-lg flex items-center gap-1">
+                  <button type="submit" class="btn-ghost text-xs text-red-400 hover:bg-red-500/100/10 border border-red-500/20 font-semibold py-1.5 px-3 rounded-lg flex items-center gap-1">
                     <i data-lucide="x-circle" class="w-3.5 h-3.5"></i>
                     Cancel Booking
                   </button>
@@ -112,10 +112,10 @@
               </div>
             </div>
             {% empty %}
-            <div class="text-center py-10 border border-dashed border-surface-300 rounded-xl bg-surface-50">
-              <i data-lucide="calendar" class="w-12 h-12 text-surface-400 mx-auto mb-3 opacity-60"></i>
-              <p class="text-surface-500 text-sm">No active home care bookings.</p>
-              <a href="{% url 'services' %}" class="text-saffron-600 hover:text-saffron-700 font-bold text-sm inline-flex items-center gap-1 mt-2">
+            <div class="text-center py-10 border border-dashed border-white/10 rounded-xl bg-transparent">
+              <i data-lucide="calendar" class="w-12 h-12 text-slate-500 mx-auto mb-3 opacity-60"></i>
+              <p class="text-slate-400 text-sm">No active home care bookings.</p>
+              <a href="{% url 'services' %}" class="text-terracotta hover:text-white font-bold text-sm inline-flex items-center gap-1 mt-2">
                 Book a service now <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
               </a>
             </div>
@@ -124,66 +124,66 @@
         </div>
 
         <!-- SECTION: Past Bookings -->
-        <div class="bg-white rounded-2xl border border-surface-200 shadow-sm p-6 relative overflow-hidden">
-          <div class="absolute top-0 left-0 right-0 h-1 bg-flaggreen-500"></div>
-          <h2 class="text-xl font-bold text-navy-900 mb-6 flex items-center gap-2">
-            <i data-lucide="history" class="text-flaggreen-600 w-5 h-5"></i>
+        <div class="card p-6 relative overflow-hidden">
+          <div class="absolute top-0 left-0 right-0 h-1 bg-terracotta"></div>
+          <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+            <i data-lucide="history" class="text-terracotta w-5 h-5"></i>
             Care History
           </h2>
 
           <div class="space-y-4">
             {% for booking in past_bookings %}
-            <div class="p-5 rounded-xl bg-surface-50/50 border border-surface-200 transition-all hover:bg-surface-50">
+            <div class="p-5 rounded-xl bg-white/5 border border-white/10 transition-all hover:bg-transparent">
               <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
                 <div class="flex items-center gap-2">
-                  <span class="text-xs font-bold text-surface-500 bg-surface-200 px-2.5 py-1 rounded-md">
+                  <span class="text-xs font-bold text-slate-400 bg-white/10 px-2.5 py-1 rounded-md">
                     {{ booking.booking_id }}
                   </span>
-                  <span class="text-sm font-bold text-navy-900">
+                  <span class="text-sm font-bold text-white">
                     {{ booking.get_service_type_display }}
                   </span>
                 </div>
                 <div>
                   {% if booking.status == 'completed' %}
-                    <span class="badge badge-success bg-flaggreen-50 text-flaggreen-600 border border-flaggreen-100">Completed</span>
+                    <span class="badge badge-success bg-flaggreen-50 text-terracotta border border-flaggreen-100">Completed</span>
                   {% else %}
-                    <span class="badge badge-error bg-red-50 text-red-600 border border-red-100">Cancelled</span>
+                    <span class="badge badge-error bg-red-500/10 text-red-400 border border-red-500/20">Cancelled</span>
                   {% endif %}
                 </div>
               </div>
 
               <!-- Details Grid -->
-              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-surface-600 mb-3">
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-slate-400 mb-3">
                 <div>
-                  <strong class="text-navy-900 block">Patient Name:</strong>
+                  <strong class="text-white block">Patient Name:</strong>
                   {{ booking.patient_name }}
                 </div>
                 <div>
-                  <strong class="text-navy-900 block">Service Dates:</strong>
+                  <strong class="text-white block">Service Dates:</strong>
                   {{ booking.start_date }}
                 </div>
                 <div>
-                  <strong class="text-navy-900 block">Care Provider:</strong>
+                  <strong class="text-white block">Care Provider:</strong>
                   {{ booking.staff.name|default:"—" }}
                 </div>
               </div>
 
               <!-- Review Form/Status -->
               {% if booking.status == 'completed' %}
-              <div class="pt-3 border-t border-surface-200 flex items-center justify-between">
-                <div class="text-xs font-semibold text-navy-900">
+              <div class="pt-3 border-t border-white/10 flex items-center justify-between">
+                <div class="text-xs font-semibold text-white">
                   Total Paid: ₹{{ booking.total_cost|floatformat:0 }}
                 </div>
 
                 {% if booking.review %}
-                <div class="flex items-center gap-1.5 text-xs text-saffron-500 font-bold bg-saffron-50 border border-saffron-100 px-3 py-1 rounded-lg">
+                <div class="flex items-center gap-1.5 text-xs text-blueGlow font-bold bg-terracotta/10 border border-terracotta/20 px-3 py-1 rounded-lg">
                   <span>Your Rating:</span>
                   <div class="flex items-center">
                     {{ booking.review.rating }}★
                   </div>
                 </div>
                 {% else %}
-                <button onclick="openReviewModal('{{ booking.booking_id }}', '{{ booking.staff.name }}')" class="btn-primary py-1.5 px-3 text-xs flex items-center gap-1 bg-gradient-to-r from-saffron-500 to-saffron-600 hover:scale-105 transition-transform shadow-md">
+                <button onclick="openReviewModal('{{ booking.booking_id }}', '{{ booking.staff.name }}')" class="btn-primary py-1.5 px-3 text-xs flex items-center gap-1 bg-gradient-to-r from-maroon to-terracotta hover:scale-105 transition-transform shadow-md">
                   <i data-lucide="star" class="w-3.5 h-3.5 text-white"></i>
                   Leave a Review
                 </button>
@@ -192,7 +192,7 @@
               {% endif %}
             </div>
             {% empty %}
-            <div class="text-center py-8 text-surface-500 text-sm">
+            <div class="text-center py-8 text-slate-400 text-sm">
               No care history.
             </div>
             {% endfor %}
@@ -205,43 +205,43 @@
       <div class="space-y-6">
         
         <!-- CARD: Patient Info -->
-        <div class="bg-white rounded-2xl border border-surface-200 shadow-sm p-6 relative overflow-hidden">
-          <div class="absolute top-0 left-0 right-0 h-1 bg-navy-500"></div>
-          <h2 class="text-lg font-bold text-navy-900 mb-4 flex items-center gap-2">
-            <i data-lucide="user" class="text-navy-500 w-5 h-5"></i>
+        <div class="card p-6 relative overflow-hidden">
+          <div class="absolute top-0 left-0 right-0 h-1 bg-white/20"></div>
+          <h2 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+            <i data-lucide="user" class="text-white w-5 h-5"></i>
             Profile Summary
           </h2>
           <div class="space-y-3.5 text-sm">
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-full bg-navy-50 text-navy-600 flex items-center justify-center font-bold">
+              <div class="w-10 h-10 rounded-full bg-white/10 text-white flex items-center justify-center font-bold">
                 {{ user.first_name|slice:":1" }}{{ user.last_name|slice:":1" }}
               </div>
               <div>
-                <div class="font-bold text-navy-900">{{ user.get_full_name }}</div>
-                <div class="text-xs text-surface-500">@{{ user.username }}</div>
+                <div class="font-bold text-white">{{ user.get_full_name }}</div>
+                <div class="text-xs text-slate-400">@{{ user.username }}</div>
               </div>
             </div>
-            <hr class="border-surface-200">
+            <hr class="border-white/10">
             <div>
-              <span class="text-xs text-surface-500 block">Phone:</span>
-              <span class="font-semibold text-navy-800">{{ user.phone }}</span>
+              <span class="text-xs text-slate-400 block">Phone:</span>
+              <span class="font-semibold text-slate-200">{{ user.phone }}</span>
             </div>
             <div>
-              <span class="text-xs text-surface-500 block">Full Address:</span>
+              <span class="text-xs text-slate-400 block">Full Address:</span>
               {% if user.profile_complete %}
-                <span class="font-medium text-navy-800 text-xs block leading-relaxed">
+                <span class="font-medium text-slate-200 text-xs block leading-relaxed">
                   {{ user.address }},<br>
                   {% if user.address_line2 %}{{ user.address_line2 }},<br>{% endif %}
                   {{ user.city }} — {{ user.pincode }}, {{ user.state }}
                 </span>
-                <a href="{% url 'complete_profile' %}" class="text-xs text-saffron-600 hover:underline font-bold mt-2 inline-block">
+                <a href="{% url 'complete_profile' %}" class="text-xs text-terracotta hover:underline font-bold mt-2 inline-block">
                   Edit Details
                 </a>
               {% else %}
-                <div class="bg-saffron-50 border border-saffron-200 rounded-xl p-3 text-xs text-saffron-800 mt-1">
+                <div class="bg-terracotta/10 border border-terracotta/20 rounded-xl p-3 text-xs text-terracotta mt-1">
                   <p class="font-semibold mb-1">Incomplete Profile</p>
                   <p class="mb-2">Complete your address details to enable speed booking.</p>
-                  <a href="{% url 'complete_profile' %}" class="btn-primary py-1 px-2.5 text-xs inline-block bg-saffron-500 text-white font-bold rounded-lg shadow-sm">
+                  <a href="{% url 'complete_profile' %}" class="btn-primary py-1 px-2.5 text-xs inline-block bg-blueGlow text-white font-bold rounded-lg shadow-sm">
                     Complete Now
                   </a>
                 </div>
@@ -251,19 +251,19 @@
         </div>
 
         <!-- CARD: Emergency Contact info -->
-        <div class="bg-navy-900 rounded-2xl p-6 text-white border border-navy-800 shadow-md">
+        <div class="card">
           <h2 class="text-base font-bold mb-3 flex items-center gap-2">
-            <i data-lucide="heart" class="text-saffron-500 w-4 h-4" fill="currentColor"></i>
+            <i data-lucide="heart" class="text-blueGlow w-4 h-4" fill="currentColor"></i>
             Need Assistance?
           </h2>
           <p class="text-xs text-slate-300 leading-relaxed mb-4">
             If you have questions about your assigned staff, or need emergency service updates, reach our 24/7 care hotline.
           </p>
-          <div class="flex items-center gap-3 bg-navy-800 p-3 rounded-xl border border-navy-700">
-            <i data-lucide="phone-call" class="text-saffron-400 w-5 h-5"></i>
+          <div class="flex items-center gap-3 bg-white/5 p-3 rounded-xl border border-white/10">
+            <i data-lucide="phone-call" class="text-blueGlow w-5 h-5"></i>
             <div>
               <div class="text-xs text-slate-400">Care Helpline</div>
-              <div class="text-sm font-bold text-saffron-400">+91 98765 43210</div>
+              <div class="text-sm font-bold text-blueGlow">+91 98765 43210</div>
             </div>
           </div>
         </div>
@@ -276,9 +276,9 @@
 
 <!-- ═══════════════ REVIEW SUBMISSION MODAL ═══════════════ -->
 <div id="review-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center hidden">
-  <div class="bg-white rounded-2xl max-w-md w-full mx-4 shadow-2xl border border-surface-200 overflow-hidden animate-fade-in-up">
+  <div class="glass max-w-md w-full mx-4 shadow-2xl border border-white/10 overflow-hidden animate-fade-in-up">
     <!-- Modal Header -->
-    <div class="px-6 py-4 bg-navy-900 text-white flex items-center justify-between border-b border-navy-800">
+    <div class="px-6 py-4 bg-[#081120] text-white flex items-center justify-between border-b border-white/10">
       <h3 class="font-bold text-lg">Leave Feedback</h3>
       <button onclick="closeReviewModal()" class="text-slate-400 hover:text-white cursor-pointer">
         <i data-lucide="x" class="w-5 h-5"></i>
@@ -292,17 +292,17 @@
       <input type="hidden" name="action" value="review">
 
       <div>
-        <label class="block text-xs font-bold text-surface-500 uppercase tracking-wider mb-1">Care Provider</label>
-        <div class="font-bold text-navy-900 text-sm" id="modal-staff-name">—</div>
+        <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Care Provider</label>
+        <div class="font-bold text-white text-sm" id="modal-staff-name">—</div>
       </div>
 
       <!-- Rating Selection -->
       <div>
-        <label class="block text-xs font-bold text-surface-500 uppercase tracking-wider mb-2">Rating (1 to 5 Stars)</label>
+        <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Rating (1 to 5 Stars)</label>
         <div class="flex items-center gap-2">
           {% for i in "12345" %}
           <button type="button" onclick="setRatingValue({{ i }})" class="star-btn p-1 cursor-pointer transition-transform hover:scale-110" data-value="{{ i }}">
-            <i data-lucide="star" class="w-7 h-7 text-surface-300" id="star-icon-{{ i }}"></i>
+            <i data-lucide="star" class="w-7 h-7 text-slate-500" id="star-icon-{{ i }}"></i>
           </button>
           {% endfor %}
         </div>
@@ -311,16 +311,16 @@
 
       <!-- Comment -->
       <div>
-        <label class="block text-xs font-bold text-surface-500 uppercase tracking-wider mb-1">Your Comment</label>
-        <textarea name="comment" rows="3" class="input-field bg-surface-50 border border-surface-200 rounded-xl" placeholder="Share your experience..."></textarea>
+        <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Your Comment</label>
+        <textarea name="comment" rows="3" class="input-field bg-white/5 border border-white/10 rounded-xl" placeholder="Share your experience..."></textarea>
       </div>
 
       <!-- Actions -->
-      <div class="pt-4 flex items-center justify-end gap-3 border-t border-surface-100">
+      <div class="pt-4 flex items-center justify-end gap-3 border-t border-white/10">
         <button type="button" onclick="closeReviewModal()" class="btn-secondary py-2 px-4 text-sm">
           Cancel
         </button>
-        <button type="submit" class="btn-primary py-2 px-4 text-sm bg-gradient-to-r from-saffron-500 to-saffron-600">
+        <button type="submit" class="btn-primary py-2 px-4 text-sm bg-gradient-to-r from-maroon to-terracotta">
           Submit Feedback
         </button>
       </div>
