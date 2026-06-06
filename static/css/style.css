@@ -506,15 +506,18 @@ form input[type="file"]:hover {
 
 .navbar.scrolled {
   padding: 0.75rem 0;
+  background: #07182E !important;
+  box-shadow: var(--shadow-premium);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .navbar.scrolled .navbar-inner {
-  background: rgba(8, 17, 32, 0.98);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid var(--glass-border);
-  border-radius: 1.25rem;
-  box-shadow: var(--shadow-premium);
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: none !important;
+  border-radius: 0;
+  box-shadow: none !important;
 }
 
 /* ===== MOBILE MENU ===== */
