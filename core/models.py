@@ -155,10 +155,10 @@ class StaffProfile(models.Model):
         validators=[MinValueValidator(18)],
         help_text='Staff must be at least 18 years old.',
     )
-    photo = models.ImageField(
-        upload_to='staff_photos/',
+    photo = models.TextField(
         blank=True,
         default='',
+        help_text='Base64 encoded profile photo.'
     )
 
     # Professional attributes
@@ -301,11 +301,10 @@ class Booking(models.Model):
     symptoms = models.TextField(blank=True, default='')
     illnesses = models.TextField(blank=True, default='')
     conditions = models.TextField(blank=True, default='')
-    discharge_file = models.FileField(
-        upload_to='discharge_docs/%Y/%m/',
+    discharge_file = models.TextField(
         blank=True,
         default='',
-        help_text='Discharge summary document (PDF, JPG, PNG).',
+        help_text='Base64 encoded discharge document.',
     )
 
     # ── Schedule ───────────────────────────────────────────────────────────

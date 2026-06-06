@@ -231,5 +231,5 @@ class BookingForm(forms.ModelForm):
             'city': forms.TextInput(attrs={'class': 'input-field', 'placeholder': 'City'}),
             'pincode': forms.TextInput(attrs={'class': 'input-field', 'placeholder': 'PIN code'}),
             'phone': forms.TextInput(attrs={'class': 'input-field', 'placeholder': 'Contact phone for booking'}),
-            'discharge_file': forms.FileInput(attrs={'class': 'input-field'})
+            'discharge_file': forms.HiddenInput(attrs={'id': 'id_discharge_file'})
         }
