@@ -57,11 +57,8 @@ class UserAdmin(BaseUserAdmin):
 class StaffProfileAdmin(admin.ModelAdmin):
     """Admin for managing healthcare staff profiles."""
 
-    list_display = [
-        'name', 'gender', 'age', 'get_service_types',
-        'hourly_rate', 'rating', 'review_count', 'available', 'agency',
-    ]
-    list_filter = ['gender', 'available', 'agency']
+    list_display = ['name', 'gender', 'age', 'get_service_types', 'hourly_rate', 'rating', 'review_count', 'available']
+    list_filter = ['gender', 'available']
     search_fields = ['name', 'specializations']
     list_editable = ['available']
     ordering = ['-rating', 'name']
@@ -75,9 +72,6 @@ class StaffProfileAdmin(admin.ModelAdmin):
         }),
         ('Performance', {
             'fields': ('rating', 'review_count', 'available'),
-        }),
-        ('Ownership', {
-            'fields': ('agency',),
         }),
     )
 

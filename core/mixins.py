@@ -32,24 +32,6 @@ class PatientRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
         return super().handle_no_permission()
 
 
-class AgencyRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
-    """
-    Mixin that requires the user to be logged in AND have an 'agency' role.
-
-    Redirects unauthenticated users to the login page.
-    Raises 403 Forbidden for authenticated users with wrong role.
-    """
-
-    def test_func(self):
-        return self.request.user.is_agency
-
-    def handle_no_permission(self):
-        if self.request.user.is_authenticated:
-            raise PermissionDenied(
-                'This page is only accessible to agency manager accounts.'
-            )
-        return super().handle_no_permission()
-
 
 class ProfileCompleteRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
     """
