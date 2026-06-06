@@ -17,6 +17,7 @@ urlpatterns = [
 
     # ── Authentication & Dashboard ──────────────────────────────────────────
     path('dashboard/', views.DashboardView.as_view(), name='dashboard'),
+    path('auth/complete-profile/', views.ProfileCompletionView.as_view(), name='complete_profile'),
     path('auth/login/', views.CustomLoginView.as_view(), name='login'),
     path('auth/register/', views.RegisterView.as_view(), name='register'),
     path('auth/logout/', views.CustomLogoutView.as_view(), name='logout'),

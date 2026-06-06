@@ -14,15 +14,15 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import FormView, TemplateView, CreateView, View
+from django.views.generic import FormView, TemplateView, CreateView, View, UpdateView
 from django.http import JsonResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 
-from .forms import (
     PatientRegistrationForm,
     HelpingHandLoginForm,
     BookingForm,
+    ProfileCompletionForm,
 )
 from .models import Booking
 from .pricing import SERVICE_RATES, format_currency
@@ -339,10 +339,25 @@ class DashboardView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        all_bookings = Booking.objects.filter(patient=self.request.user).order_by('-created_at')
-        ctx['active_bookings'] = all_bookings.exclude(status__in=['completed', 'cancelled'])
-        ctx['past_bookings'] = all_bookings.filter(status__in=['completed', 'cancelled'])
+        bookings = Booking.objects.filter(patient=self.request.user).order_by('-created_at')
+        ctx['active_bookings'] = bookings.exclude(status__in=['completed', 'cancelled'])
+        ctx['past_bookings'] = bookings.filter(status__in=['completed', 'cancelled'])
         return ctx
+
+class ProfileCompletionView(LoginRequiredMixin, UpdateView):
+    """
+    View for users to complete their profile (address details).
+    """
+    form_class = ProfileCompletionForm
+    template_name = 'auth/complete_profile.html'
+    success_url = reverse_lazy('dashboard')
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Your profile has been updated successfully!')
+        return super().form_valid(form)
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
