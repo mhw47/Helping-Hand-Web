@@ -5,36 +5,39 @@
 {% block meta_description %}Log in to your Helping Hand account to manage bookings and access healthcare services.{% endblock %}
 
 {% block content %}
-<div class="min-h-screen flex items-center justify-center py-24 px-4" style="background: var(--color-surface-50);">
-  <div class="w-full max-w-md">
+<div class="min-h-screen flex items-center justify-center py-28 px-4 relative overflow-hidden" style="background: var(--color-surface-50);">
+  <!-- Soft background ambient light -->
+  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full blur-3xl opacity-10 pointer-events-none" style="background: radial-gradient(circle, rgba(125, 183, 255, 0.15) 0%, rgba(139, 92, 246, 0.08) 70%);"></div>
+
+  <div class="w-full max-w-md relative z-10">
     <!-- Card -->
-    <div class="card" style="padding: 2.5rem;">
+    <div class="card p-8 sm:p-12 border border-white/10 bg-gradient-to-b from-[#07182E]/85 to-[#081120]/95 backdrop-blur-xl">
       <!-- Header -->
       <div class="text-center mb-8">
-        <a href="{% url 'landing' %}" class="inline-flex items-center gap-2 mb-6">
-          <div class="w-12 h-12 rounded-xl gradient-primary flex items-center justify-center shadow-lg" style="box-shadow: 0 4px 15px rgba(13, 148, 136, 0.2);">
+        <a href="{% url 'landing' %}" class="inline-flex items-center gap-2 mb-4 group">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-maroon to-terracotta flex items-center justify-center shadow-lg transition-transform duration-300 group-hover:scale-105">
             <i data-lucide="heart" class="w-6 h-6 text-white" fill="white"></i>
           </div>
         </a>
-        <h1 class="text-2xl font-extrabold text-surface-900 mb-2">Welcome Back</h1>
-        <p class="text-sm text-surface-500">Sign in to your Helping Hand account</p>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight" style="font-family: var(--font-heading);">Welcome Back</h1>
+        <p class="text-xs sm:text-sm text-slate-400 font-medium mt-1">Sign in to your Helping Hand account</p>
       </div>
 
       <!-- Error Messages -->
       {% if form.non_field_errors %}
-      <div class="mb-6 p-4 rounded-xl text-sm" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); color: #f87171;">
+      <div class="mb-6 p-4 rounded-xl text-xs sm:text-sm border bg-maroon/10 border-maroon/20 text-red-400">
         <div class="flex items-center gap-2 mb-1">
-          <i data-lucide="alert-circle" class="w-4 h-4 shrink-0"></i>
-          <span class="font-medium">Login failed</span>
+          <i data-lucide="alert-circle" class="w-4 h-4 shrink-0 text-red-400"></i>
+          <span class="font-bold">Login failed</span>
         </div>
         {% for error in form.non_field_errors %}
-        <p>{{ error }}</p>
+        <p class="leading-relaxed">{{ error }}</p>
         {% endfor %}
       </div>
       {% endif %}
 
       <!-- Login Form -->
-      <form method="post" action="{% url 'login' %}" id="login-form">
+      <form method="post" action="{% url 'login' %}" id="login-form" class="space-y-5">
         {% csrf_token %}
 
         {% if next %}
@@ -42,41 +45,49 @@
         {% endif %}
 
         <!-- Username -->
-        <div class="mb-5">
-          <label for="login-username" class="block text-sm font-medium text-surface-700 mb-2">Username</label>
+        <div>
+          <label for="id_username" class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Username</label>
           {{ form.username }}
           {% if form.username.errors %}
-          <p class="text-xs mt-1.5" style="color: var(--color-error);">{{ form.username.errors.0 }}</p>
+          <p class="text-xs mt-1.5 text-red-400 flex items-center gap-1">
+            <i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>
+            <span>{{ form.username.errors.0 }}</span>
+          </p>
           {% endif %}
         </div>
 
         <!-- Password -->
-        <div class="mb-6">
-          <label for="login-password" class="block text-sm font-medium text-surface-700 mb-2">Password</label>
+        <div>
+          <label for="id_password" class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Password</label>
           {{ form.password }}
           {% if form.password.errors %}
-          <p class="text-xs mt-1.5" style="color: var(--color-error);">{{ form.password.errors.0 }}</p>
+          <p class="text-xs mt-1.5 text-red-400 flex items-center gap-1">
+            <i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>
+            <span>{{ form.password.errors.0 }}</span>
+          </p>
           {% endif %}
         </div>
 
         <!-- Submit -->
-        <button type="submit" class="btn-primary w-full text-base" id="login-submit-btn">
-          <i data-lucide="log-in" class="w-5 h-5 mr-2"></i>
-          Sign In
-        </button>
+        <div class="pt-2">
+          <button type="submit" class="btn-primary w-full text-center py-3.5" id="login-submit-btn">
+            <i data-lucide="log-in" class="w-5 h-5 mr-2"></i>
+            Sign In
+          </button>
+        </div>
       </form>
 
       <!-- Divider -->
       <div class="flex items-center gap-3 my-6">
-        <div class="flex-1 h-px" style="background: var(--color-surface-300);"></div>
-        <span class="text-xs text-surface-500">OR</span>
-        <div class="flex-1 h-px" style="background: var(--color-surface-300);"></div>
+        <div class="flex-1 h-px bg-white/5"></div>
+        <span class="text-[10px] font-bold tracking-wider text-slate-500">OR</span>
+        <div class="flex-1 h-px bg-white/5"></div>
       </div>
 
       <!-- Register Link -->
-      <p class="text-center text-sm text-surface-600">
+      <p class="text-center text-xs sm:text-sm text-slate-400 font-medium">
         Don't have an account?
-        <a href="{% url 'register' %}" class="font-semibold text-primary-400 transition-colors" style="text-decoration: underline; text-underline-offset: 3px;" id="goto-register">
+        <a href="{% url 'register' %}" class="font-bold text-blueGlow hover:text-white transition-colors duration-200 ml-1" style="text-decoration: underline; text-underline-offset: 3px;" id="goto-register">
           Create one
         </a>
       </p>

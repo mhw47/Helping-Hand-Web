@@ -13,9 +13,18 @@
     tailwind.config = {
       theme: {
         extend: {
+          colors: {
+            darkCobalt: '#07182E',
+            deepNavy: '#081120',
+            maroon: '#6D28D9',
+            terracotta: '#8B5CF6',
+            blueGlow: '#7DB7FF',
+
+            softGray: '#C7D0D9',
+          },
           fontFamily: {
-            heading: ['Inter', 'system-ui', 'sans-serif'],
-            body: ['DM Sans', 'system-ui', 'sans-serif'],
+            heading: ['Outfit', 'system-ui', 'sans-serif'],
+            body: ['Poppins', 'system-ui', 'sans-serif'],
           },
         },
       },
@@ -24,6 +33,7 @@
 
   <!-- Custom Design System CSS -->
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Manrope:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
   <!-- HTMX -->
   <script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"></script>
@@ -33,21 +43,29 @@
 
   {% block extra_head %}{% endblock %}
 </head>
-<body class="min-h-screen flex flex-col" style="background: var(--color-surface-50);">
+<body class="min-h-screen flex flex-col font-body" style="background: var(--color-surface-50);">
   <!-- Navbar -->
   {% include "core/_navbar.html" %}
 
   <!-- Messages -->
   {% if messages %}
-  <div class="fixed top-20 right-4 z-50 space-y-2" id="messages-container">
+  <div class="fixed top-24 right-6 z-50 space-y-3" id="messages-container">
     {% for message in messages %}
-    <div class="card animate-fade-in-up flex items-center gap-3 px-5 py-3 text-sm
-      {% if message.tags == 'success' %}border-l-4 border-green-500{% endif %}
-      {% if message.tags == 'error' %}border-l-4 border-red-500{% endif %}
-      {% if message.tags == 'warning' %}border-l-4 border-amber-500{% endif %}
-      {% if message.tags == 'info' %}border-l-4 border-blue-500{% endif %}"
-      style="min-width: 280px;">
-      <span class="text-surface-800">{{ message }}</span>
+    <div class="glass-premium animate-fade-in-up flex items-center gap-3 px-6 py-4 rounded-2xl shadow-2xl text-sm border-l-4
+      {% if message.tags == 'success' %}border-[#7DB7FF]{% elif message.tags == 'error' %}border-[#6D28D9]{% elif message.tags == 'warning' %}border-[#8B5CF6]{% else %}border-[#7DB7FF]{% endif %}"
+      style="min-width: 300px; border-top-color: rgba(255,255,255,0.06); border-right-color: rgba(255,255,255,0.06); border-bottom-color: rgba(255,255,255,0.06);">
+      <div class="flex items-center gap-3">
+        {% if message.tags == 'success' %}
+          <i data-lucide="check-circle" class="w-5 h-5 text-[#7DB7FF]"></i>
+        {% elif message.tags == 'error' %}
+          <i data-lucide="alert-octagon" class="w-5 h-5 text-[#ff6b6b]"></i>
+        {% elif message.tags == 'warning' %}
+          <i data-lucide="alert-triangle" class="w-5 h-5 text-[#8B5CF6]"></i>
+        {% else %}
+          <i data-lucide="info" class="w-5 h-5 text-[#7DB7FF]"></i>
+        {% endif %}
+        <span class="text-white font-medium">{{ message }}</span>
+      </div>
     </div>
     {% endfor %}
   </div>
@@ -55,7 +73,12 @@
     // Auto-dismiss messages after 5 seconds
     setTimeout(() => {
       const container = document.getElementById('messages-container');
-      if (container) container.style.display = 'none';
+      if (container) {
+        container.style.transition = 'all 0.5s ease';
+        container.style.opacity = '0';
+        container.style.transform = 'translateY(-20px)';
+        setTimeout(() => container.remove(), 500);
+      }
     }, 5000);
   </script>
   {% endif %}
@@ -97,7 +120,6 @@
     if (mobileToggle && mobileMenu) {
       mobileToggle.addEventListener('click', () => {
         mobileMenu.classList.toggle('open');
-        const icon = mobileToggle.querySelector('i');
         if (mobileMenu.classList.contains('open')) {
           mobileToggle.innerHTML = '<i data-lucide="x" class="w-6 h-6"></i>';
         } else {

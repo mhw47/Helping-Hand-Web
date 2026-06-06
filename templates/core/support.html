@@ -5,21 +5,24 @@
 {% block meta_description %}Helping Hand support — Find answers to frequently asked questions about our healthcare services, booking, pricing, and staff qualifications.{% endblock %}
 
 {% block content %}
-<div class="pt-28 pb-16 min-h-screen" style="background: var(--color-surface-50);">
-  <div class="max-w-4xl mx-auto px-4">
+<div class="pt-32 pb-20 min-h-screen relative overflow-hidden" style="background: var(--color-surface-50);">
+  <!-- Soft background ambient light -->
+  <div class="absolute top-0 left-1/4 w-96 h-96 rounded-full blur-3xl opacity-20 pointer-events-none" style="background: rgba(125, 183, 255, 0.08);"></div>
 
+  <div class="max-w-4xl mx-auto px-4 relative z-10">
     <!-- ═══════════════ HEADER ═══════════════ -->
-    <div class="text-center mb-12">
-      <div class="w-16 h-16 rounded-2xl gradient-primary flex items-center justify-center mx-auto mb-4 shadow-lg" style="box-shadow: 0 8px 25px rgba(13, 148, 136, 0.2);">
+    <div class="text-center mb-16 space-y-3">
+      <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-maroon to-terracotta flex items-center justify-center mx-auto mb-5 shadow-lg shadow-terracotta/10">
         <i data-lucide="help-circle" class="w-8 h-8 text-white"></i>
       </div>
-      <h1 class="text-3xl sm:text-4xl font-extrabold text-surface-900 mb-3">Help & Support</h1>
-      <p class="text-lg text-surface-500">Find answers to common questions or reach out to us</p>
+      <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-white" style="font-family: var(--font-heading);">Help & Support</h1>
+      <p class="text-base sm:text-lg text-slate-400 font-medium">Find answers to common questions or reach out to our dedicated care managers</p>
+      <div class="w-20 h-1 bg-gradient-to-r from-terracotta to-blueGlow mx-auto rounded-full mt-4"></div>
     </div>
 
     <!-- ═══════════════ SEARCH BAR ═══════════════ -->
-    <div class="relative max-w-xl mx-auto mb-8">
-      <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5" style="color: var(--color-surface-500);"></i>
+    <div class="relative max-w-xl mx-auto mb-10 group">
+      <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-blueGlow transition-colors"></i>
       <input
         type="text"
         placeholder="Search FAQs..."
@@ -31,12 +34,11 @@
     </div>
 
     <!-- ═══════════════ CATEGORY FILTERS ═══════════════ -->
-    <div class="flex flex-wrap gap-2 justify-center mb-8" id="faq-categories">
+    <div class="flex flex-wrap gap-2.5 justify-center mb-10" id="faq-categories">
       {% for cat in categories %}
       <button
         onclick="filterByCategory('{{ cat }}')"
-        class="px-4 py-2 rounded-full text-sm font-medium transition-all cursor-pointer {% if forloop.first %}gradient-primary text-white shadow-md{% endif %}"
-        style="{% if not forloop.first %}background: var(--color-surface-200); color: var(--color-surface-600); border: 1px solid var(--color-surface-300);{% endif %}"
+        class="px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold tracking-tight transition-all cursor-pointer border {% if forloop.first %}bg-gradient-to-tr from-maroon to-terracotta text-white border-transparent shadow-md{% else %}bg-white/5 text-slate-300 border-white/10 hover:text-white hover:bg-white/10{% endif %}"
         data-category="{{ cat }}"
       >
         {{ cat }}
@@ -45,51 +47,56 @@
     </div>
 
     <!-- ═══════════════ FAQ ACCORDION ═══════════════ -->
-    <div class="space-y-3 mb-16" id="faq-list">
+    <div class="space-y-4 mb-20" id="faq-list">
       {% for faq in faqs %}
-      <div class="card" style="padding: 0; overflow: hidden;" data-category="{{ faq.cat }}" data-question="{{ faq.q|lower }}" data-answer="{{ faq.a|lower }}">
+      <div class="card p-0 overflow-hidden border border-white/5 bg-gradient-to-tr from-[#07182E]/60 to-[#0D1B2A]/40 hover:border-white/10 transition-colors" data-category="{{ faq.cat }}" data-question="{{ faq.q|lower }}" data-answer="{{ faq.a|lower }}">
         <button
           onclick="toggleFAQ(this)"
-          class="w-full text-left px-6 py-5 flex items-center justify-between cursor-pointer transition-colors"
-          style="background: transparent;"
+          class="w-full text-left px-6 py-5 flex items-center justify-between cursor-pointer transition-colors bg-transparent group"
           id="faq-item-{{ forloop.counter0 }}"
         >
-          <span class="font-medium text-surface-900 pr-4">{{ faq.q }}</span>
-          <i data-lucide="chevron-down" class="w-5 h-5 shrink-0 transition-transform duration-300 faq-chevron" style="color: var(--color-surface-500);"></i>
+          <span class="font-semibold text-white tracking-tight group-hover:text-blueGlow transition-colors duration-200" style="font-family: var(--font-heading);">{{ faq.q }}</span>
+          <div class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center shrink-0 ml-4 group-hover:bg-blueGlow/10 transition-colors">
+            <i data-lucide="chevron-down" class="w-4 h-4 transition-transform duration-300 faq-chevron text-slate-400 group-hover:text-blueGlow"></i>
+          </div>
         </button>
         <div class="faq-answer">
-          <p class="px-6 pb-5 text-sm leading-relaxed text-surface-600">{{ faq.a }}</p>
+          <div class="px-6 pb-6 pt-1 text-sm leading-relaxed text-slate-300 border-t border-white/5 bg-[#07182E]/30">
+            {{ faq.a }}
+          </div>
         </div>
       </div>
       {% endfor %}
 
       <!-- No results message -->
-      <div class="text-center py-12 hidden" id="faq-no-results" style="color: var(--color-surface-500);">
-        <i data-lucide="help-circle" class="w-12 h-12 mx-auto mb-3" style="opacity: 0.3;"></i>
-        <p>No matching questions found</p>
+      <div class="text-center py-16 hidden" id="faq-no-results">
+        <div class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center mx-auto mb-4 border border-white/10">
+          <i data-lucide="help-circle" class="w-6 h-6 text-slate-500"></i>
+        </div>
+        <p class="text-sm font-medium text-slate-400">No matching questions found</p>
       </div>
     </div>
 
     <!-- ═══════════════ CONTACT SECTION ═══════════════ -->
-    <div class="text-center mb-8">
-      <h2 class="text-2xl font-extrabold text-surface-900 mb-2">Still need help?</h2>
-      <p class="text-surface-500">Our support team is here to assist you</p>
+    <div class="text-center mb-10 space-y-2">
+      <h2 class="text-2xl font-bold tracking-tight text-white" style="font-family: var(--font-heading);">Still need help?</h2>
+      <p class="text-sm text-slate-400 font-medium">Our customer care managers are available 24/7</p>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-lg mx-auto">
-      <a href="tel:+919876543210" class="card card-hover text-center group">
-        <div class="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3 transition-colors" style="background: var(--color-primary-100);">
-          <i data-lucide="phone" class="w-6 h-6" style="color: var(--color-primary-400);"></i>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-lg mx-auto">
+      <a href="tel:+919876543210" class="card card-hover p-6 text-center group flex flex-col items-center">
+        <div class="w-12 h-12 rounded-xl bg-terracotta/10 border border-terracotta/20 flex items-center justify-center mb-4 transition-colors group-hover:bg-terracotta/20">
+          <i data-lucide="phone" class="w-6 h-6 text-terracotta"></i>
         </div>
-        <h3 class="font-bold text-surface-900">Call Us</h3>
-        <p class="text-sm mt-1 text-surface-500">+91 98765 43210</p>
+        <h3 class="font-bold text-white text-lg tracking-tight" style="font-family: var(--font-heading);">Call Us</h3>
+        <p class="text-xs sm:text-sm mt-1 text-slate-400">+91 98765 43210</p>
       </a>
-      <a href="mailto:care@helpinghand.in" class="card card-hover text-center group">
-        <div class="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3 transition-colors" style="background: rgba(59, 130, 246, 0.15);">
-          <i data-lucide="mail" class="w-6 h-6" style="color: #60a5fa;"></i>
+      <a href="mailto:care@helpinghand.in" class="card card-hover p-6 text-center group flex flex-col items-center">
+        <div class="w-12 h-12 rounded-xl bg-blueGlow/10 border border-blueGlow/20 flex items-center justify-center mb-4 transition-colors group-hover:bg-blueGlow/20">
+          <i data-lucide="mail" class="w-6 h-6 text-blueGlow"></i>
         </div>
-        <h3 class="font-bold text-surface-900">Email Us</h3>
-        <p class="text-sm mt-1 text-surface-500">care@helpinghand.in</p>
+        <h3 class="font-bold text-white text-lg tracking-tight" style="font-family: var(--font-heading);">Email Us</h3>
+        <p class="text-xs sm:text-sm mt-1 text-slate-400">care@helpinghand.in</p>
       </a>
     </div>
   </div>
@@ -110,13 +117,11 @@
     document.querySelectorAll('.faq-answer.open').forEach(a => {
       a.classList.remove('open');
       a.closest('.card').querySelector('.faq-chevron').style.transform = '';
-      a.closest('.card').querySelector('.faq-chevron').style.color = 'var(--color-surface-500)';
     });
 
     if (!isOpen) {
       answer.classList.add('open');
       chevron.style.transform = 'rotate(180deg)';
-      chevron.style.color = 'var(--color-primary-400)';
     }
   }
 
@@ -126,11 +131,9 @@
     // Update button styles
     document.querySelectorAll('#faq-categories button').forEach(btn => {
       if (btn.dataset.category === category) {
-        btn.className = 'px-4 py-2 rounded-full text-sm font-medium transition-all cursor-pointer gradient-primary text-white shadow-md';
-        btn.style = '';
+        btn.className = 'px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold tracking-tight transition-all cursor-pointer border bg-gradient-to-tr from-maroon to-terracotta text-white border-transparent shadow-md';
       } else {
-        btn.className = 'px-4 py-2 rounded-full text-sm font-medium transition-all cursor-pointer';
-        btn.style = 'background: var(--color-surface-200); color: var(--color-surface-600); border: 1px solid var(--color-surface-300);';
+        btn.className = 'px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold tracking-tight transition-all cursor-pointer border bg-white/5 text-slate-300 border-white/10 hover:text-white hover:bg-white/10';
       }
     });
 

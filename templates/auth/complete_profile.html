@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Complete Your Profile{% endblock %}
+
+{% block content %}
+<div class="min-h-[85vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-surface-50">
+  <div class="max-w-xl w-full space-y-8 animate-fade-in-up">
+    <!-- Header -->
+    <div class="text-center">
+      <div class="w-16 h-16 rounded-2xl gradient-primary flex items-center justify-center mx-auto mb-4 shadow-lg animate-pulse" style="box-shadow: 0 8px 25px rgba(255, 153, 51, 0.25);">
+        <i data-lucide="user-check" class="w-8 h-8 text-white"></i>
+      </div>
+      <h2 class="text-3xl font-extrabold text-navy-900">Complete Your Profile</h2>
+      <p class="mt-2 text-sm text-surface-500">
+        Please fill in your address and contact information to finish setting up your account.
+      </p>
+    </div>
+
+    <!-- Card -->
+    <div class="card bg-white border border-surface-200 shadow-xl p-8 rounded-2xl relative overflow-hidden">
+      <!-- Top Saffron/Green indicator line -->
+      <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-saffron-500 via-navy-500 to-flaggreen-500"></div>
+      
+      <form method="post" class="space-y-6">
+        {% csrf_token %}
+        
+        <!-- Display non-field errors -->
+        {% if form.non_field_errors %}
+        <div class="rounded-lg bg-red-50 p-4 border border-red-200 text-sm text-red-600 space-y-1">
+          {% for error in form.non_field_errors %}
+          <p>{{ error }}</p>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Two Column Name Row -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-semibold text-navy-800 mb-2">First Name</label>
+            {{ form.first_name }}
+            {% if form.first_name.errors %}
+            <p class="text-xs text-red-500 mt-1 font-medium">{{ form.first_name.errors.0 }}</p>
+            {% endif %}
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-navy-800 mb-2">Last Name</label>
+            {{ form.last_name }}
+            {% if form.last_name.errors %}
+            <p class="text-xs text-red-500 mt-1 font-medium">{{ form.last_name.errors.0 }}</p>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Address Lines -->
+        <div>
+          <label class="block text-sm font-semibold text-navy-800 mb-2">Address Line 1</label>
+          {{ form.address }}
+          {% if form.address.errors %}
+          <p class="text-xs text-red-500 mt-1 font-medium">{{ form.address.errors.0 }}</p>
+          {% endif %}
+          <p class="text-xs text-surface-500 mt-1">Flat No., Building Name, Street Name.</p>
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-navy-800 mb-2">Address Line 2</label>
+          {{ form.address_line2 }}
+          {% if form.address_line2.errors %}
+          <p class="text-xs text-red-500 mt-1 font-medium">{{ form.address_line2.errors.0 }}</p>
+          {% endif %}
+          <p class="text-xs text-surface-500 mt-1">Landmark, Area, Colony (optional).</p>
+        </div>
+
+        <!-- City / State / Pin -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="sm:col-span-1">
+            <label class="block text-sm font-semibold text-navy-800 mb-2">City</label>
+            {{ form.city }}
+            {% if form.city.errors %}
+            <p class="text-xs text-red-500 mt-1 font-medium">{{ form.city.errors.0 }}</p>
+            {% endif %}
+          </div>
+          <div class="sm:col-span-1">
+            <label class="block text-sm font-semibold text-navy-800 mb-2">State</label>
+            {{ form.state }}
+            {% if form.state.errors %}
+            <p class="text-xs text-red-500 mt-1 font-medium">{{ form.state.errors.0 }}</p>
+            {% endif %}
+          </div>
+          <div class="sm:col-span-1">
+            <label class="block text-sm font-semibold text-navy-800 mb-2">PIN Code</label>
+            {{ form.pincode }}
+            {% if form.pincode.errors %}
+            <p class="text-xs text-red-500 mt-1 font-medium">{{ form.pincode.errors.0 }}</p>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Alternate Phone -->
+        <div>
+          <label class="block text-sm font-semibold text-navy-800 mb-2">Alternate Phone (Optional)</label>
+          {{ form.alternate_phone }}
+          {% if form.alternate_phone.errors %}
+          <p class="text-xs text-red-500 mt-1 font-medium">{{ form.alternate_phone.errors.0 }}</p>
+          {% endif %}
+          <p class="text-xs text-surface-500 mt-1">Second contact number (10 digits).</p>
+        </div>
+
+        <!-- Submit Button -->
+        <div>
+          <button type="submit" class="btn-primary w-full py-3.5 text-base shadow-xl flex items-center justify-center gap-2 hover:scale-[1.02] transition-transform">
+            <i data-lucide="check" class="w-5 h-5"></i>
+            Save and Continue
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

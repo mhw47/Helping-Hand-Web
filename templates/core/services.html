@@ -6,84 +6,102 @@
 
 {% block content %}
 <!-- ═══════════════ HEADER ═══════════════ -->
-<section class="pt-24 pb-16" style="background: var(--color-surface-50);">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
-    <div class="text-center max-w-2xl mx-auto">
-      <h1 class="text-4xl sm:text-5xl font-extrabold text-surface-900 mb-4">Our Services</h1>
-      <p class="text-lg text-surface-500">Comprehensive healthcare solutions tailored to your needs</p>
+<section class="pt-32 pb-16 relative overflow-hidden" style="background: var(--color-surface-50);">
+  <!-- Soft background ambient glow -->
+  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 rounded-full blur-3xl opacity-20 pointer-events-none" style="background: rgba(125, 183, 255, 0.08);"></div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 relative z-10">
+    <div class="text-center max-w-2xl mx-auto space-y-3">
+      <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-white" style="font-family: var(--font-heading);">Our Services</h1>
+      <p class="text-base sm:text-lg text-slate-400 font-medium">Comprehensive, high-end healthcare solutions tailored to your family's needs</p>
+      <div class="w-20 h-1 bg-gradient-to-r from-terracotta to-blueGlow mx-auto rounded-full mt-4"></div>
     </div>
   </div>
 
   <!-- ═══════════════ SERVICE CARDS ═══════════════ -->
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16 relative z-10">
     {% for svc in services_detailed %}
-    <div class="card" style="padding: 0; overflow: hidden;" id="service-{{ svc.key }}">
+    <div class="card p-0 overflow-hidden border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.3)] hover:border-blueGlow/30 transition-all duration-300 group" id="service-{{ svc.key }}">
       <div class="grid grid-cols-1 lg:grid-cols-2">
         <!-- Info Panel -->
-        <div class="p-8 lg:p-12">
-          <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-5 {{ svc.bg_class }}">
-            <i data-lucide="{{ svc.icon }}" class="w-7 h-7 {{ svc.icon_class }}"></i>
-          </div>
-          <h2 class="text-2xl sm:text-3xl font-extrabold text-surface-900 mb-4">{{ svc.title }}</h2>
-          <p class="text-surface-500 leading-relaxed mb-6">{{ svc.desc }}</p>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
-            {% for feat in svc.features %}
-            <div class="flex items-center gap-2.5 text-sm text-surface-700">
-              <i data-lucide="check" class="w-4 h-4 shrink-0" style="color: var(--color-primary-400);"></i>
-              {{ feat }}
+        <div class="p-8 lg:p-14 flex flex-col justify-between">
+          <div>
+            <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-6 shadow-md transition-all duration-300 group-hover:scale-105 {{ svc.bg_class }}">
+              <i data-lucide="{{ svc.icon }}" class="w-7 h-7 {{ svc.icon_class }}"></i>
             </div>
-            {% endfor %}
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-white mb-4 tracking-tight" style="font-family: var(--font-heading);">{{ svc.title }}</h2>
+            <p class="text-sm sm:text-base text-slate-300 leading-relaxed mb-8">{{ svc.desc }}</p>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+              {% for feat in svc.features %}
+              <div class="flex items-center gap-3 text-sm text-slate-300">
+                <div class="w-5 h-5 rounded-full bg-blueGlow/15 flex items-center justify-center shrink-0 border border-blueGlow/25">
+                  <i data-lucide="check" class="w-3.5 h-3.5 text-[#7DB7FF]"></i>
+                </div>
+                <span>{{ feat }}</span>
+              </div>
+              {% endfor %}
+            </div>
           </div>
-          <a href="{% url 'book_service' service_type=svc.key %}" class="btn-primary inline-flex items-center gap-2">
-            Book Now <i data-lucide="arrow-right" class="w-4 h-4"></i>
-          </a>
+          
+          <div>
+            <a href="{% url 'book_service' service_type=svc.key %}" class="btn-primary inline-flex items-center gap-2 px-8 py-3.5 shadow-md">
+              <span>Book Now</span>
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </a>
+          </div>
         </div>
 
         <!-- Pricing Panel -->
-        <div class="p-8 lg:p-12 flex flex-col justify-center text-white {{ svc.gradient_class }} {% if forloop.counter|divisibleby:2 %}lg:order-first{% endif %}">
-          <h3 class="text-lg font-bold mb-6" style="color: rgba(255,255,255,0.8);">Pricing</h3>
+        <div class="p-8 lg:p-14 flex flex-col justify-center text-white relative bg-cover bg-center {% if forloop.counter|divisibleby:2 %}lg:order-first{% endif %} {{ svc.gradient_class }}">
+          <!-- Overlay to blend with design style -->
+          <div class="absolute inset-0 bg-[#07182E]/85 backdrop-blur-[4px]"></div>
+          
+          <div class="relative z-10 space-y-6">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300">Pricing Information</h3>
 
-          {% if svc.key != "onetime" %}
-          <div class="space-y-4">
-            <!-- Daily -->
-            <div class="rounded-xl p-4" style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
-              <div class="text-sm mb-1" style="color: rgba(255,255,255,0.7);">Daily (1-6 days)</div>
-              <div class="text-3xl font-extrabold">
-                {{ svc.daily_price }}
-                <span class="text-base font-normal" style="color: rgba(255,255,255,0.7);">/ day</span>
+            {% if svc.key != "onetime" %}
+            <div class="space-y-4">
+              <!-- Daily -->
+              <div class="rounded-2xl p-4 bg-white/5 border border-white/10 backdrop-blur-md shadow-sm transition-all hover:bg-white/10 hover:border-white/20">
+                <div class="text-[10px] uppercase font-bold tracking-wider text-slate-400 mb-1">Daily (1-6 days)</div>
+                <div class="text-3xl font-extrabold text-white tracking-tight" style="font-family: var(--font-heading);">
+                  {{ svc.daily_price }}
+                  <span class="text-xs font-normal text-slate-400">/ day</span>
+                </div>
+              </div>
+              <!-- Weekly -->
+              <div class="rounded-2xl p-4 bg-white/5 border border-white/10 backdrop-blur-md shadow-sm transition-all hover:bg-white/10 hover:border-white/20">
+                <div class="flex items-center justify-between mb-1">
+                  <span class="text-[10px] uppercase font-bold tracking-wider text-slate-300">Weekly (7-29 days)</span>
+                  <span class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-white/20 text-white border border-white/35">Save 10%</span>
+                </div>
+                <div class="text-3xl font-extrabold text-white tracking-tight" style="font-family: var(--font-heading);">
+                  {{ svc.weekly_price }}
+                  <span class="text-xs font-normal text-slate-400">/ day</span>
+                </div>
+              </div>
+              <!-- Monthly -->
+              <div class="rounded-2xl p-4 bg-white/5 border border-white/10 backdrop-blur-md shadow-sm transition-all hover:bg-white/10 hover:border-white/20">
+                <div class="flex items-center justify-between mb-1">
+                  <span class="text-[10px] uppercase font-bold tracking-wider text-slate-300">Monthly (30+ days)</span>
+                  <span class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-white/20 text-white border border-white/35">Save 25%</span>
+                </div>
+                <div class="text-3xl font-extrabold text-white tracking-tight" style="font-family: var(--font-heading);">
+                  {{ svc.monthly_price }}
+                  <span class="text-xs font-normal text-slate-400">/ day</span>
+                </div>
               </div>
             </div>
-            <!-- Weekly -->
-            <div class="rounded-xl p-4" style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
-              <div class="flex items-center gap-2 mb-1">
-                <span class="text-sm" style="color: rgba(255,255,255,0.7);">Weekly (7-29 days)</span>
-                <span class="px-2 py-0.5 rounded-full text-xs font-bold" style="background: rgba(255,255,255,0.2);">-10%</span>
-              </div>
-              <div class="text-3xl font-extrabold">
-                {{ svc.weekly_price }}
-                <span class="text-base font-normal" style="color: rgba(255,255,255,0.7);">/ day</span>
-              </div>
+            {% else %}
+            <!-- One-time flat rate -->
+            <div class="rounded-2xl p-8 text-center bg-white/5 border border-white/10 backdrop-blur-md shadow-md">
+              <div class="text-xs uppercase font-bold tracking-wider text-slate-300 mb-2">Flat Rate Per Visit</div>
+              <div class="text-5xl font-black text-terracotta mb-3 tracking-tight" style="font-family: var(--font-heading);">{{ svc.daily_price }}</div>
+              <div class="text-xs text-slate-200">One-time flat rate service, no commitments required.</div>
             </div>
-            <!-- Monthly -->
-            <div class="rounded-xl p-4" style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
-              <div class="flex items-center gap-2 mb-1">
-                <span class="text-sm" style="color: rgba(255,255,255,0.7);">Monthly (30+ days)</span>
-                <span class="px-2 py-0.5 rounded-full text-xs font-bold" style="background: rgba(255,255,255,0.2);">-25%</span>
-              </div>
-              <div class="text-3xl font-extrabold">
-                {{ svc.monthly_price }}
-                <span class="text-base font-normal" style="color: rgba(255,255,255,0.7);">/ day</span>
-              </div>
-            </div>
+            {% endif %}
           </div>
-          {% else %}
-          <!-- One-time flat rate -->
-          <div class="rounded-xl p-6 text-center" style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
-            <div class="text-sm mb-2" style="color: rgba(255,255,255,0.7);">Per Visit</div>
-            <div class="text-5xl font-extrabold mb-2">{{ svc.daily_price }}</div>
-            <div class="text-sm" style="color: rgba(255,255,255,0.7);">One-time, no commitment</div>
-          </div>
-          {% endif %}
         </div>
       </div>
     </div>
@@ -91,15 +109,15 @@
   </div>
 
   <!-- ═══════════════ HIGHLIGHTS ═══════════════ -->
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-24 relative z-10">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
       {% for h in highlights %}
-      <div class="card text-center">
-        <div class="w-12 h-12 rounded-xl gradient-primary flex items-center justify-center mx-auto mb-4 shadow-lg" style="box-shadow: 0 8px 25px rgba(13, 148, 136, 0.2);">
+      <div class="card text-center card-hover group">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-maroon to-terracotta flex items-center justify-center mx-auto mb-5 shadow-lg transition-all duration-300 group-hover:-translate-y-1">
           <i data-lucide="{{ h.icon }}" class="w-6 h-6 text-white"></i>
         </div>
-        <h3 class="font-bold text-surface-900 mb-2">{{ h.title }}</h3>
-        <p class="text-sm text-surface-500">{{ h.desc }}</p>
+        <h3 class="font-bold text-white text-lg mb-2 tracking-tight" style="font-family: var(--font-heading);">{{ h.title }}</h3>
+        <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">{{ h.desc }}</p>
       </div>
       {% endfor %}
     </div>
