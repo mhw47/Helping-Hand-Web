@@ -509,9 +509,9 @@ form input[type="file"]:hover {
 }
 
 .navbar.scrolled .navbar-inner {
-  background: rgba(8, 17, 32, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(8, 17, 32, 0.98);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   border: 1px solid var(--glass-border);
   border-radius: 1.25rem;
   box-shadow: var(--shadow-premium);

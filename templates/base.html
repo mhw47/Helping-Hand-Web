@@ -105,12 +105,19 @@
   <!-- Navbar scroll effect -->
   <script>
     const navbar = document.getElementById('main-navbar');
-    const navbarInner = document.getElementById('navbar-inner');
+    const isLanding = {% if request.resolver_match.url_name == 'landing' %}true{% else %}false{% endif %};
+    
+    if (!isLanding) {
+      navbar.classList.add('scrolled');
+    }
+
     window.addEventListener('scroll', () => {
-      if (window.scrollY > 20) {
-        navbar.classList.add('scrolled');
-      } else {
-        navbar.classList.remove('scrolled');
+      if (isLanding) {
+        if (window.scrollY > 20) {
+          navbar.classList.add('scrolled');
+        } else {
+          navbar.classList.remove('scrolled');
+        }
       }
     }, { passive: true });
 
