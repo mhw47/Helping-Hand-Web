@@ -5,13 +5,7 @@
     <div class="flex items-center justify-between h-16 px-4 transition-all duration-300" id="navbar-inner">
       <!-- Logo -->
       <a href="{% url 'landing' %}" class="flex items-center gap-3 group" id="nav-logo">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-maroon to-terracotta flex items-center justify-center shadow-[0_4px_15px_rgba(139,92,246,0.25)] transition-transform duration-300 group-hover:scale-105">
-          <i data-lucide="heart" class="w-5 h-5 text-white" fill="white"></i>
-        </div>
-        <span class="text-xl font-bold tracking-tight" style="font-family: var(--font-heading);">
-          <span class="text-white">Helping</span>
-          <span class="text-terracotta">Hand</span>
-        </span>
+        <img src="{% static 'images/logo.png' %}" alt="Helping Hand Logo" class="h-10 w-auto transition-transform duration-300 group-hover:scale-105">
       </a>
 
       <!-- Desktop Nav -->
