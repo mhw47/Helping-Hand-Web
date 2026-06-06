@@ -501,11 +501,11 @@ form input[type="file"]:hover {
   right: 0;
   z-index: 50;
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  padding: 1rem 0;
+  padding: 0.5rem 0;
 }
 
 .navbar.scrolled {
-  padding: 0.625rem 0;
+  padding: 0.25rem 0;
   background: #07182E !important;
   box-shadow: var(--shadow-premium);
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
