@@ -1,5 +1,5 @@
 """
-WSGI config for Helping Hand project.
+WSGI config for Helping Hand project , Helpful for Deployment
 """
 
 import os
